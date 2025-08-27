@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { generateSocialMediaPosts, generateBlogIdeas, generateImage } from '../../services/geminiService';
-import { SocialMediaPost, BlogIdea } from '../../types';
+import { SocialMediaPost, BlogIdea, ConceptualAudio, ConceptualVideo } from '../../types';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -16,6 +16,9 @@ const AIFactoryView: React.FC = () => {
   const [socialPosts, setSocialPosts] = useLocalStorage<SocialMediaPost[]>('aiFactory_socialPosts', []);
   const [blogIdeas, setBlogIdeas] = useLocalStorage<BlogIdea[]>('aiFactory_blogIdeas', []);
   const [imageUrl, setImageUrl] = useLocalStorage<string>('aiFactory_imageUrl', '');
+  const [conceptualAudio, setConceptualAudio] = useLocalStorage<ConceptualAudio | null>('aiFactory_conceptualAudio', null);
+  const [conceptualVideo, setConceptualVideo] = useLocalStorage<ConceptualVideo | null>('aiFactory_conceptualVideo', null);
+
 
   const handleGenerate = useCallback(async () => {
     if (!prompt.trim()) {
@@ -29,6 +32,8 @@ const AIFactoryView: React.FC = () => {
     if (activeTab !== 'social') setSocialPosts([]);
     if (activeTab !== 'blog') setBlogIdeas([]);
     if (activeTab !== 'image') setImageUrl('');
+    if (activeTab !== 'audio') setConceptualAudio(null);
+    if (activeTab !== 'video') setConceptualVideo(null);
 
 
     try {
@@ -45,6 +50,30 @@ const AIFactoryView: React.FC = () => {
           const url = await generateImage(prompt);
           setImageUrl(url);
           break;
+        case 'audio':
+          // This is a conceptual generation, no API call needed.
+          const audioTool = Math.random() > 0.5 ? 'Riffusion' : 'Bark (SunO AI)';
+          setConceptualAudio({
+            tool: audioTool,
+            promptUsed: prompt,
+            description: `This simulates generating audio using the open-source model ${audioTool}. Based on your prompt, it would create a short audio clip.`,
+            howTo: audioTool === 'Riffusion'
+              ? 'You can run Riffusion locally or use a web UI to turn text prompts into spectrograms, which are then converted into audio.'
+              : 'Bark is a transformer-based text-to-audio model. You can run it via a Hugging Face Space or a local Gradio app to generate realistic speech and sound effects.'
+          });
+          break;
+        case 'video':
+          // This is a conceptual generation, no API call needed.
+           const videoTool = Math.random() > 0.5 ? 'Stable Video Diffusion' : 'AnimateDiff';
+           setConceptualVideo({
+              tool: videoTool,
+              promptUsed: prompt,
+              description: `This simulates generating a short video clip using the open-source model ${videoTool}.`,
+              howTo: videoTool === 'Stable Video Diffusion'
+                ? 'SVD is an image-to-video model. You would typically provide a starting image and a prompt. It can be run via ComfyUI or other Stable Diffusion interfaces.'
+                : 'AnimateDiff is a motion module that can be added to Stable Diffusion pipelines to generate animated videos from text prompts. It is commonly used with tools like AUTOMATIC1111 or ComfyUI.'
+           });
+          break;
       }
     } catch (e) {
       setError(`Failed to generate ${activeTab} content. Please try again.`);
@@ -52,7 +81,7 @@ const AIFactoryView: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [prompt, activeTab, setSocialPosts, setBlogIdeas, setImageUrl]);
+  }, [prompt, activeTab, setSocialPosts, setBlogIdeas, setImageUrl, setConceptualAudio, setConceptualVideo]);
   
   const TabButton: React.FC<{tabType: ContentType; label: string, disabled?: boolean}> = ({ tabType, label, disabled }) => (
     <button
@@ -107,8 +136,41 @@ const AIFactoryView: React.FC = () => {
                 </div>
             );
         case 'audio':
+            return conceptualAudio && (
+                <div className="animate-fade-in">
+                    <Card title={`Conceptual Audio Generation: ${conceptualAudio.tool}`}>
+                        <div className="space-y-4">
+                            <p className="text-gray-300">{conceptualAudio.description}</p>
+                            <div>
+                                <p className="text-sm font-semibold text-gray-400">Prompt Used:</p>
+                                <p className="text-sm text-indigo-300 bg-gray-900 p-2 rounded-md">"{conceptualAudio.promptUsed}"</p>
+                            </div>
+                             <div>
+                                <p className="text-sm font-semibold text-gray-400">How It Works (Open Source):</p>
+                                <p className="text-sm text-gray-300">{conceptualAudio.howTo}</p>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            );
         case 'video':
-            return <Card title={`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Generation`}><p className="text-gray-400">Conceptual integration with open-source tools like Riffusion (Audio) and Stable Diffusion (Video) is a core part of the Prometheus OS roadmap.</p></Card>
+            return conceptualVideo && (
+                 <div className="animate-fade-in">
+                    <Card title={`Conceptual Video Generation: ${conceptualVideo.tool}`}>
+                        <div className="space-y-4">
+                            <p className="text-gray-300">{conceptualVideo.description}</p>
+                            <div>
+                                <p className="text-sm font-semibold text-gray-400">Prompt Used:</p>
+                                <p className="text-sm text-indigo-300 bg-gray-900 p-2 rounded-md">"{conceptualVideo.promptUsed}"</p>
+                            </div>
+                             <div>
+                                <p className="text-sm font-semibold text-gray-400">How It Works (Open Source):</p>
+                                <p className="text-sm text-gray-300">{conceptualVideo.howTo}</p>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            );
         default:
             return null;
     }
@@ -133,6 +195,18 @@ const AIFactoryView: React.FC = () => {
                 <option disabled>ComfyUI</option>
             </>;
             break;
+        case 'audio':
+            options = <>
+                <option>Riffusion</option>
+                <option>Bark (SunO AI)</option>
+            </>;
+            break;
+        case 'video':
+             options = <>
+                <option>Stable Video Diffusion</option>
+                <option>AnimateDiff</option>
+            </>;
+            break;
         default:
             return null;
     }
@@ -155,8 +229,8 @@ const AIFactoryView: React.FC = () => {
         <TabButton tabType="social" label="Social Media" />
         <TabButton tabType="blog" label="Blog Ideas" />
         <TabButton tabType="image" label="Image" />
-        <TabButton tabType="audio" label="Audio (Concept)" disabled />
-        <TabButton tabType="video" label="Video (Concept)" disabled />
+        <TabButton tabType="audio" label="Audio (Concept)" />
+        <TabButton tabType="video" label="Video (Concept)" />
       </div>
 
       <Card>
@@ -171,7 +245,9 @@ const AIFactoryView: React.FC = () => {
             placeholder={
                 activeTab === 'social' ? "e.g., My new single 'Midnight Train' is out on Friday!" :
                 activeTab === 'blog' ? "e.g., The themes of loneliness in my new poetry collection." :
-                "e.g., Album art concept: a lone astronaut on a neon-lit planet."
+                activeTab === 'image' ? "e.g., Album art concept: a lone astronaut on a neon-lit planet." :
+                activeTab === 'audio' ? "e.g., Lo-fi synthwave track with a melancholic mood." :
+                "e.g., A cinematic shot of a rainy city street at night."
             }
           />
            {error && <p className="text-sm text-red-500">{error}</p>}

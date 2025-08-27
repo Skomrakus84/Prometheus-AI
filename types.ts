@@ -106,3 +106,18 @@ export interface ScheduledPost {
   platform: SocialMediaPost['platform'];
   content: string;
 }
+
+// AI Factory Conceptual Types
+export interface ConceptualAudio {
+  tool: 'Riffusion' | 'Bark (SunO AI)';
+  description: string;
+  promptUsed: string;
+  howTo: string;
+}
+
+export interface ConceptualVideo {
+  tool: 'Stable Video Diffusion' | 'AnimateDiff';
+  description: string;
+  promptUsed: string;
+  howTo: string;
+}

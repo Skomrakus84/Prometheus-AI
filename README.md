@@ -22,6 +22,7 @@ Poniższa lista śledzi postęp prac nad projektem, dzieląc zadania na te, któ
     -   **[x]** Generator pomysłów na wpisy blogowe wraz ze szkicami i słowami kluczowymi.
     -   **[x]** Generator obrazów (integracja z modelem Imagen 4).
     -   **[x]** UI do konceptualnego wyboru modeli AI, podkreślający filozofię open-source.
+    -   **[x]** **Konceptualne Audio/Wideo:** Zintegrowanie interfejsu dla generowania audio i wideo, wyjaśniającego konceptualną interakcję z narzędziami open-source (np. Riffusion, Stable Video Diffusion).
 
 -   **[x] Distribution Hub (Centrum Dystrybucji):**
     -   **[x]** Generator profesjonalnych informacji prasowych na podstawie krótkiego opisu.
@@ -54,15 +55,14 @@ Poniższa lista śledzi postęp prac nad projektem, dzieląc zadania na te, któ
     -   **[x]** **Pełne zarządzanie CRM:** Rozbudowa modułu CRM o możliwość ręcznego dodawania, edycji i usuwania kontaktów.
     -   **[x]** **Integracja z Kalendarzem:** Możliwość eksportu harmonogramu z Distribution Hub do pliku `.ics`.
     -   **[x]** **Zapisywanie Stanu:** Implementacja mechanizmu zapisywania wygenerowanych treści (np. w `localStorage`), aby nie znikały po odświeżeniu strony.
+    -   **[x]** **Interaktywna Automatyzacja:** Rozbudowa modułu Automation o wizualny, konceptualny edytor "przeciągnij i upuść" do budowania schematów.
+
 
 ### 🔜 Do Wykonania
 
--   **[ ] Funkcjonalność:**
-    -   **[ ]** **Interaktywna Automatyzacja:** Rozbudowa modułu Automation o wizualny edytor "przeciągnij i upuść" do budowania schematów (zamiast samego generowania pomysłów).
-
 -   **[ ] AI Factory - Rozszerzenia:**
-    -   **[ ]** **Implementacja Generowania Audio:** Podłączenie konceptualnego modułu Audio do rzeczywistego, darmowego API lub narzędzia open-source.
-    -   **[ ]** **Implementacja Generowania Wideo:** Analogicznie do audio, integracja z generatorem wideo.
+    -   **[ ]** **Implementacja Generowania Audio:** Podłączenie modułu Audio do rzeczywistego, darmowego API lub narzędzia open-source (np. Replicate API).
+    -   **[ ]** **Implementacja Generowania Wideo:** Analogicznie do audio, integracja z generatorem wideo (np. Replicate API).
 
 -   **[ ] UI/UX i Dostępność:**
     -   **[ ]** **Onboarding / Samouczek:** Stworzenie krótkiego przewodnika dla nowych użytkowników, który wyjaśni możliwości każdego modułu.
