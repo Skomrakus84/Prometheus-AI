@@ -1,3 +1,4 @@
+
 export enum ActiveView {
   DASHBOARD = 'DASHBOARD',
   AI_FACTORY = 'AI_FACTORY',
@@ -8,6 +9,8 @@ export enum ActiveView {
   INTERACTIVE = 'INTERACTIVE',
   SETTINGS = 'SETTINGS',
 }
+
+// --- Generic Content Types ---
 
 export interface SocialMediaPost {
   platform: 'Facebook' | 'X' | 'Instagram' | 'LinkedIn' | 'TikTok' | 'Mastodon' | 'Bluesky';
@@ -30,6 +33,9 @@ export interface PressRelease {
   contactInfo: string;
 }
 
+
+// --- Distribution Hub Types ---
+
 export type DistributionStatus = 'idle' | 'sending' | 'success' | 'failed';
 
 export interface DistributionPlatform {
@@ -37,7 +43,21 @@ export interface DistributionPlatform {
   status: DistributionStatus;
 }
 
-// Analytics Types
+export interface Submission {
+  platformName: string;
+  platformType: 'Playlist Curator' | 'Music Blog' | 'Literary Magazine' | 'Review Site';
+  pitch: string;
+}
+
+export interface ScheduledPost {
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  time: string;
+  platform: SocialMediaPost['platform'];
+  content: string;
+}
+
+// --- Analytics Types ---
+
 export interface KPI {
   metric: string;
   value: string;
@@ -66,7 +86,8 @@ export interface AnalyticsData {
   }[];
 }
 
-// CRM Types
+// --- CRM Types ---
+
 export interface Contact {
   id: string;
   name: string;
@@ -75,7 +96,8 @@ export interface Contact {
   tags: string[];
 }
 
-// Automation Types
+// --- Automation Types ---
+
 export interface AutomationWorkflow {
   title: string;
   description: string;
@@ -84,7 +106,8 @@ export interface AutomationWorkflow {
   tools: string[];
 }
 
-// Interactive AI Types
+// --- Interactive AI Types ---
+
 export interface InteractiveConcept {
   title: string;
   description: string;
@@ -93,31 +116,28 @@ export interface InteractiveConcept {
   imagePrompt: string;
 }
 
-// Distribution Hub Types
-export interface Submission {
-  platformName: string;
-  platformType: 'Playlist Curator' | 'Music Blog' | 'Literary Magazine' | 'Review Site';
-  pitch: string;
-}
 
-export interface ScheduledPost {
-  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-  time: string;
-  platform: SocialMediaPost['platform'];
-  content: string;
-}
+// --- AI Factory Types ---
 
-// AI Factory Conceptual Types
-export interface ConceptualAudio {
+export interface SimulatedAudio {
   tool: 'Riffusion' | 'Bark (SunO AI)';
-  description: string;
   promptUsed: string;
+  description: string;
   howTo: string;
+  parameters: {
+      seed: number;
+      denoising: number;
+      guidance_scale: number;
+  };
 }
 
-export interface ConceptualVideo {
-  tool: 'Stable Video Diffusion' | 'AnimateDiff';
-  description: string;
-  promptUsed: string;
-  howTo: string;
+
+export type VideoGenerationStatus = 'idle' | 'generating' | 'success' | 'failed';
+
+export interface GeneratedVideo {
+    status: VideoGenerationStatus;
+    videoUrl?: string;
+    /** The operation object returned from the Gemini API, used for polling the status of the video generation. */
+    operation?: any;
+    error?: string;
 }

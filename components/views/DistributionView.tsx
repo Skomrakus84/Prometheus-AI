@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+
+import React, { useState, useCallback, memo } from 'react';
 import { generatePressRelease, generateSubmissions, generateContentSchedule } from '../../services/geminiService';
 import { PressRelease, DistributionPlatform, DistributionStatus, Submission, ScheduledPost } from '../../types';
 import Card from '../ui/Card';
@@ -6,10 +7,11 @@ import Button from '../ui/Button';
 import { CheckCircleIcon, XCircleIcon, DownloadIcon } from '../icons/Icons';
 import Spinner from '../ui/Spinner';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useTranslation } from '../../i18n';
 
 type DistributionTab = 'pr' | 'submissions' | 'scheduler';
 
-const TabButton: React.FC<{ tabType: DistributionTab; activeTab: DistributionTab; label: string; onClick: (tab: DistributionTab) => void; }> = ({ tabType, activeTab, label, onClick }) => (
+const TabButton: React.FC<{ tabType: DistributionTab; activeTab: DistributionTab; label: string; onClick: (tab: DistributionTab) => void; }> = memo(({ tabType, activeTab, label, onClick }) => (
     <button
         onClick={() => onClick(tabType)}
         className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -18,9 +20,11 @@ const TabButton: React.FC<{ tabType: DistributionTab; activeTab: DistributionTab
     >
         {label}
     </button>
-);
+));
+TabButton.displayName = 'TabButton';
 
 const PressReleaseGenerator: React.FC = () => {
+    const { t } = useTranslation();
     const [prompt, setPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -29,13 +33,13 @@ const PressReleaseGenerator: React.FC = () => {
     const [isDistributing, setIsDistributing] = useState(false);
 
     const handleGenerate = useCallback(async () => {
-        if (!prompt.trim()) { setError('Please enter an announcement.'); return; }
+        if (!prompt.trim()) { setError(t('distributionHub.pr.errorPrompt')); return; }
         setIsLoading(true); setError(null); setPressRelease(null); setDistributionList([]); setIsDistributing(false);
         try {
             const result = await generatePressRelease(prompt);
             setPressRelease(result);
-        } catch (e) { setError('Failed to generate press release.'); console.error(e); } finally { setIsLoading(false); }
-    }, [prompt, setPressRelease, setDistributionList]);
+        } catch (e) { setError(t('distributionHub.pr.errorGenerate')); console.error(e); } finally { setIsLoading(false); }
+    }, [prompt, setPressRelease, setDistributionList, t]);
 
     const handleDistribute = useCallback(() => {
         const platforms = ["PR.com (Free)", "PRLog", "24-7 Press Release", "openPR", "NewsWireToday"];
@@ -51,29 +55,29 @@ const PressReleaseGenerator: React.FC = () => {
         <div className="space-y-6">
             <Card>
                 <div className="space-y-4">
-                    <label htmlFor="pr-prompt" className="block text-sm font-medium text-gray-300">Announcement Details</label>
-                    <textarea id="pr-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Announcing my debut novel 'The Last Starlight', out this fall." />
+                    <label htmlFor="pr-prompt" className="block text-sm font-medium text-gray-300">{t('distributionHub.pr.promptLabel')}</label>
+                    <textarea id="pr-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder={t('distributionHub.pr.placeholder')} />
                     {error && <p className="text-sm text-red-500">{error}</p>}
-                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>Generate Press Release</Button></div>
+                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>{t('distributionHub.pr.buttonGenerate')}</Button></div>
                 </div>
             </Card>
             {pressRelease && (
                 <div className="space-y-6 animate-fade-in">
-                    <Card title="Generated Press Release">
+                    <Card title={t('distributionHub.pr.cardTitle')}>
                         <div className="space-y-4 text-gray-300">
                             <h2 className="text-2xl font-bold text-white">{pressRelease.headline}</h2>
                             <h3 className="text-lg text-gray-400">{pressRelease.subheadline}</h3>
                             <p className="text-sm font-semibold">{pressRelease.dateline}</p>
                             <div className="whitespace-pre-wrap text-gray-300">{pressRelease.body}</div>
                             <div className="border-t border-gray-700 pt-4 mt-4">
-                                <h4 className="font-semibold mb-2 text-white">Contact:</h4>
+                                <h4 className="font-semibold mb-2 text-white">{t('distributionHub.pr.contactLabel')}</h4>
                                 <p className="whitespace-pre-wrap text-sm text-gray-400">{pressRelease.contactInfo}</p>
                             </div>
                         </div>
                     </Card>
-                    <div className="text-center"><Button onClick={handleDistribute} isLoading={isDistributing} disabled={isDistributing}>Simulate Distribution</Button></div>
+                    <div className="text-center"><Button onClick={handleDistribute} isLoading={isDistributing} disabled={isDistributing}>{t('distributionHub.pr.buttonSimulate')}</Button></div>
                     {distributionList.length > 0 && (
-                        <Card title="Distribution Status">
+                        <Card title={t('distributionHub.pr.statusCardTitle')}>
                             <ul className="space-y-3">{distributionList.map((platform) => (
                                 <li key={platform.name} className="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
                                     <span className="text-gray-300 font-medium">{platform.name}</span>
@@ -94,28 +98,29 @@ const PressReleaseGenerator: React.FC = () => {
 };
 
 const SubmissionAssistant: React.FC = () => {
+    const { t } = useTranslation();
     const [prompt, setPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [submissions, setSubmissions] = useLocalStorage<Submission[]>('dist_submissions', []);
     
     const handleGenerate = useCallback(async () => {
-        if (!prompt.trim()) { setError('Please describe your work.'); return; }
+        if (!prompt.trim()) { setError(t('distributionHub.submissions.errorPrompt')); return; }
         setIsLoading(true); setError(null); setSubmissions([]);
         try {
             const result = await generateSubmissions(prompt);
             setSubmissions(result);
-        } catch (e) { setError('Failed to generate submission pitches.'); console.error(e); } finally { setIsLoading(false); }
-    }, [prompt, setSubmissions]);
+        } catch (e) { setError(t('distributionHub.submissions.errorGenerate')); console.error(e); } finally { setIsLoading(false); }
+    }, [prompt, setSubmissions, t]);
 
     return (
          <div className="space-y-6">
             <Card>
                 <div className="space-y-4">
-                    <label htmlFor="sub-prompt" className="block text-sm font-medium text-gray-300">Describe Your Work</label>
-                    <textarea id="sub-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., An indie-folk album about seasons changing, with acoustic guitar and vocal harmonies." />
+                    <label htmlFor="sub-prompt" className="block text-sm font-medium text-gray-300">{t('distributionHub.submissions.promptLabel')}</label>
+                    <textarea id="sub-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder={t('distributionHub.submissions.placeholder')} />
                     {error && <p className="text-sm text-red-500">{error}</p>}
-                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>Generate Pitches</Button></div>
+                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>{t('distributionHub.submissions.buttonGenerate')}</Button></div>
                 </div>
             </Card>
             {isLoading && submissions.length === 0 && <div className="text-center"><Spinner /></div>}
@@ -135,19 +140,20 @@ const SubmissionAssistant: React.FC = () => {
 }
 
 const ContentScheduler: React.FC = () => {
+    const { t } = useTranslation();
     const [prompt, setPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [schedule, setSchedule] = useLocalStorage<ScheduledPost[]>('dist_schedule', []);
 
     const handleGenerate = useCallback(async () => {
-        if (!prompt.trim()) { setError('Please describe your promotional goal.'); return; }
+        if (!prompt.trim()) { setError(t('distributionHub.scheduler.errorPrompt')); return; }
         setIsLoading(true); setError(null); setSchedule([]);
         try {
             const result = await generateContentSchedule(prompt);
             setSchedule(result);
-        } catch (e) { setError('Failed to generate content schedule.'); console.error(e); } finally { setIsLoading(false); }
-    }, [prompt, setSchedule]);
+        } catch (e) { setError(t('distributionHub.scheduler.errorGenerate')); console.error(e); } finally { setIsLoading(false); }
+    }, [prompt, setSchedule, t]);
 
     const handleExportToICS = useCallback(() => {
         const weekdays: { [key: string]: number } = {
@@ -216,25 +222,30 @@ const ContentScheduler: React.FC = () => {
         <div className="space-y-6">
             <Card>
                 <div className="space-y-4">
-                    <label htmlFor="sched-prompt" className="block text-sm font-medium text-gray-300">Promotional Goal</label>
-                    <textarea id="sched-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Build hype for the week leading up to my single release on Friday." />
+                    <label htmlFor="sched-prompt" className="block text-sm font-medium text-gray-300">{t('distributionHub.scheduler.promptLabel')}</label>
+                    <textarea id="sched-prompt" rows={3} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder={t('distributionHub.scheduler.placeholder')} />
                     {error && <p className="text-sm text-red-500">{error}</p>}
-                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>Generate Schedule</Button></div>
+                    <div className="text-right"><Button onClick={handleGenerate} isLoading={isLoading}>{t('distributionHub.scheduler.buttonGenerate')}</Button></div>
                 </div>
             </Card>
             {isLoading && schedule.length === 0 && <div className="text-center"><Spinner /></div>}
             {schedule.length > 0 && (
                 <Card>
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold text-white">7-Day Content Schedule</h3>
+                        <h3 className="text-lg font-semibold text-white">{t('distributionHub.scheduler.cardTitle')}</h3>
                         <Button onClick={handleExportToICS} icon={<DownloadIcon />}>
-                            Export (.ics)
+                            {t('distributionHub.scheduler.buttonExport')}
                         </Button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="border-b border-gray-700 text-sm text-gray-400">
-                                <tr><th className="p-2">Day</th><th className="p-2">Time</th><th className="p-2">Platform</th><th className="p-2">Content</th></tr>
+                                <tr>
+                                    <th className="p-2">{t('distributionHub.scheduler.table.day')}</th>
+                                    <th className="p-2">{t('distributionHub.scheduler.table.time')}</th>
+                                    <th className="p-2">{t('distributionHub.scheduler.table.platform')}</th>
+                                    <th className="p-2">{t('distributionHub.scheduler.table.content')}</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {schedule.map((post, i) => (
@@ -256,6 +267,7 @@ const ContentScheduler: React.FC = () => {
 
 
 const DistributionView: React.FC = () => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<DistributionTab>('pr');
 
     const renderContent = () => {
@@ -269,13 +281,13 @@ const DistributionView: React.FC = () => {
     
     return (
         <div className="animate-fade-in">
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Distribution Hub</h1>
-            <p className="text-lg text-gray-400 mb-6">Manage press releases, targeted submissions, and content schedules.</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('distributionHub.title')}</h1>
+            <p className="text-lg text-gray-400 mb-6">{t('distributionHub.description')}</p>
             
             <div className="flex flex-wrap gap-2 mb-6 p-1 bg-gray-800 rounded-lg">
-                <TabButton tabType="pr" activeTab={activeTab} onClick={setActiveTab} label="Press Releases" />
-                <TabButton tabType="submissions" activeTab={activeTab} onClick={setActiveTab} label="Submission Assistant" />
-                <TabButton tabType="scheduler" activeTab={activeTab} onClick={setActiveTab} label="Content Scheduler" />
+                <TabButton tabType="pr" activeTab={activeTab} onClick={setActiveTab} label={t('distributionHub.tabs.pr')} />
+                <TabButton tabType="submissions" activeTab={activeTab} onClick={setActiveTab} label={t('distributionHub.tabs.submissions')} />
+                <TabButton tabType="scheduler" activeTab={activeTab} onClick={setActiveTab} label={t('distributionHub.tabs.scheduler')} />
             </div>
             
             <div>{renderContent()}</div>

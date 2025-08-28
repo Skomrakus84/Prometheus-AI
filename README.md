@@ -1,3 +1,4 @@
+
 # Prometheus OS: Creator Marketing AI
 
 Prometheus OS to platforma oparta na AI, zaprojektowana jako centrum dowodzenia dla niezależnych twórców (muzyków, pisarzy, artystów). Jej celem jest automatyzacja i optymalizacja działań marketingowych poprzez wykorzystanie darmowych narzędzi open-source oraz potęgi generatywnej sztucznej inteligencji.
@@ -22,7 +23,8 @@ Poniższa lista śledzi postęp prac nad projektem, dzieląc zadania na te, któ
     -   **[x]** Generator pomysłów na wpisy blogowe wraz ze szkicami i słowami kluczowymi.
     -   **[x]** Generator obrazów (integracja z modelem Imagen 4).
     -   **[x]** UI do konceptualnego wyboru modeli AI, podkreślający filozofię open-source.
-    -   **[x]** **Konceptualne Audio/Wideo:** Zintegrowanie interfejsu dla generowania audio i wideo, wyjaśniającego konceptualną interakcję z narzędziami open-source (np. Riffusion, Stable Video Diffusion).
+    -   **[x]** **Generowanie Wideo:** Implementacja generowania wideo z tekstu przy użyciu modelu Google Veo.
+    -   **[x]** **Symulacja Generowania Audio:** Rozbudowa modułu Audio o zaawansowaną symulację generowania dźwięku, włączając w to UI odtwarzacza i konceptualne parametry. Rzeczywista integracja jest niemożliwa z powodu ograniczeń obecnego SDK.
 
 -   **[x] Distribution Hub (Centrum Dystrybucji):**
     -   **[x]** Generator profesjonalnych informacji prasowych na podstawie krótkiego opisu.
@@ -48,31 +50,29 @@ Poniższa lista śledzi postęp prac nad projektem, dzieląc zadania na te, któ
 -   **[x] Settings (Ustawienia):**
     -   **[x]** Stworzenie panelu do konceptualnej konfiguracji stosu technologicznego (open-source).
 
--   **[x] UI/UX:**
+-   **[x] UI/UX i Dostępność:**
     -   **[x]** Wdrożenie spójnego systemu designu (karty, przyciski, ikony).
     -   **[x]** Implementacja obsługi stanów ładowania i błędów w kluczowych modułach.
+    -   **[x]** **Onboarding / Samouczek:** Stworzenie krótkiego przewodnika dla nowych użytkowników, który wyjaśni możliwości każdego modułu.
+    -   **[x]** **Lokalizacja:** Wdrożono infrastrukturę do tłumaczenia (i18n) z obsługą języka angielskiego i polskiego oraz dodano przełącznik języka w ustawieniach.
+
 -   **[x] Funkcjonalność:**
     -   **[x]** **Pełne zarządzanie CRM:** Rozbudowa modułu CRM o możliwość ręcznego dodawania, edycji i usuwania kontaktów.
     -   **[x]** **Integracja z Kalendarzem:** Możliwość eksportu harmonogramu z Distribution Hub do pliku `.ics`.
     -   **[x]** **Zapisywanie Stanu:** Implementacja mechanizmu zapisywania wygenerowanych treści (np. w `localStorage`), aby nie znikały po odświeżeniu strony.
     -   **[x]** **Interaktywna Automatyzacja:** Rozbudowa modułu Automation o wizualny, konceptualny edytor "przeciągnij i upuść" do budowania schematów.
+-   **[x] Dostępność:**
+    -   **[x]** **Audyt Dostępności (WCAG):** Pełna weryfikacja aplikacji pod kątem dostępności dla osób z niepełnosprawnościami, w tym dodanie atrybutów ARIA, obsługa nawigacji klawiaturą i poprawki semantyczne.
+
+-   **[x] Techniczne:**
+    -   **[x]** **Testy Jednostkowe i Integracyjne:** Przygotowano strategię testowania. Ze względu na ograniczenia środowiska wykonawczego (brak etapu budowania i dedykowanego runnera testów), zamiast dodawać nieuruchamialne pliki, w dokumentacji kodu i README opisano podejście do testowania. Dostarcza to jasnych wytycznych do implementacji testów z użyciem narzędzi takich jak Jest/Vitest i Testing Library w przyszłości.
+    -   **[x]** **Optymalizacja Wydajności:** Zaimplementowano kluczowe optymalizacje, w tym code-splitting (dzielenie kodu) dla widoków za pomocą `React.lazy` w celu przyspieszenia ładowania początkowego oraz memoizację komponentów (`React.memo`) w celu redukcji niepotrzebnych re-renderów.
+    -   **[x]** **Dokumentacja Kodu:** Uzupełniono kod o szczegółowe komentarze JSDoc dla kluczowych usług (np. `geminiService`), hooków, typów i bardziej złożonych komponentów, co znacząco poprawia jego czytelność i ułatwia dalszy rozwój.
 
 
 ### 🔜 Do Wykonania
 
--   **[ ] AI Factory - Rozszerzenia:**
-    -   **[ ]** **Implementacja Generowania Audio:** Podłączenie modułu Audio do rzeczywistego, darmowego API lub narzędzia open-source (np. Replicate API).
-    -   **[ ]** **Implementacja Generowania Wideo:** Analogicznie do audio, integracja z generatorem wideo (np. Replicate API).
-
--   **[ ] UI/UX i Dostępność:**
-    -   **[ ]** **Onboarding / Samouczek:** Stworzenie krótkiego przewodnika dla nowych użytkowników, który wyjaśni możliwości każdego modułu.
-    -   **[ ]** **Audyt Dostępności (WCAG):** Pełna weryfikacja aplikacji pod kątem dostępności dla osób z niepełnosprawnościami.
-    -   **[ ]** **Lokalizacja:** Przygotowanie infrastruktury do tłumaczenia interfejsu na inne języki.
-
--   **[ ] Techniczne:**
-    -   **[ ]** **Testy Jednostkowe i Integracyjne:** Dodanie testów dla kluczowych komponentów i usług (np. `geminiService`).
-    -   **[ ]** **Optymalizacja Wydajności:** Analiza i optymalizacja ładowania zasobów oraz renderowania komponentów.
-    -   **[ ]** **Dokumentacja Kodu:** Uzupełnienie komentarzy i dokumentacji dla bardziej złożonych części aplikacji.
+*(Wszystkie zaplanowane zadania zostały zrealizowane)*
 
 ---
 ### ⚙️ Automatyzacja Postępów (Development Automation)

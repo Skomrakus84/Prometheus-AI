@@ -1,15 +1,20 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Suspense, lazy } from 'react';
 import Sidebar from './components/Sidebar';
-import DashboardView from './components/views/DashboardView';
-import AIFactoryView from './components/views/AIFactoryView';
-import AnalyticsView from './components/views/AnalyticsView';
-import DistributionView from './components/views/DistributionView';
-import CRMView from './components/views/CRMView';
-import AutomationView from './components/views/AutomationView';
-import InteractiveView from './components/views/InteractiveView';
-import SettingsView from './components/views/SettingsView';
 import { ActiveView } from './types';
+import { I18nProvider } from './i18n';
+import Spinner from './components/ui/Spinner';
+
+// Lazy load views for performance optimization (code-splitting)
+const DashboardView = lazy(() => import('./components/views/DashboardView'));
+const AIFactoryView = lazy(() => import('./components/views/AIFactoryView'));
+const AnalyticsView = lazy(() => import('./components/views/AnalyticsView'));
+const DistributionView = lazy(() => import('./components/views/DistributionView'));
+const CRMView = lazy(() => import('./components/views/CRMView'));
+const AutomationView = lazy(() => import('./components/views/AutomationView'));
+const InteractiveView = lazy(() => import('./components/views/InteractiveView'));
+const SettingsView = lazy(() => import('./components/views/SettingsView'));
+
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ActiveView>(ActiveView.DASHBOARD);
@@ -38,12 +43,16 @@ const App: React.FC = () => {
   }, [activeView]);
 
   return (
-    <div className="flex h-screen bg-gray-900 text-gray-100 font-sans">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-        {renderActiveView()}
-      </main>
-    </div>
+    <I18nProvider>
+      <div className="flex h-screen bg-gray-900 text-gray-100 font-sans">
+        <Sidebar activeView={activeView} setActiveView={setActiveView} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+          <Suspense fallback={<div className="flex items-center justify-center h-full"><Spinner className="h-8 w-8" /></div>}>
+            {renderActiveView()}
+          </Suspense>
+        </main>
+      </div>
+    </I18nProvider>
   );
 };
 

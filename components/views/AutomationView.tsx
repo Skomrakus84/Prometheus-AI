@@ -1,10 +1,12 @@
-import React, { useState, useCallback, DragEvent } from 'react';
+
+import React, { useState, useCallback, DragEvent, memo } from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { AutomationWorkflow } from '../../types';
 import { generateWorkflows } from '../../services/geminiService';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { GripVerticalIcon, TrashIcon } from '../icons/Icons';
+import { useTranslation } from '../../i18n';
 
 // --- Workflow Builder Components & Data ---
 
@@ -37,7 +39,7 @@ const DRAGGABLE_ITEMS: Record<string, DraggableItemData[]> = {
     ],
 };
 
-const DraggableItem: React.FC<{ item: DraggableItemData, onDragStart: (e: DragEvent<HTMLDivElement>, item: DraggableItemData) => void }> = ({ item, onDragStart }) => (
+const DraggableItem: React.FC<{ item: DraggableItemData, onDragStart: (e: DragEvent<HTMLDivElement>, item: DraggableItemData) => void }> = memo(({ item, onDragStart }) => (
     <div
         draggable
         onDragStart={(e) => onDragStart(e, item)}
@@ -46,14 +48,16 @@ const DraggableItem: React.FC<{ item: DraggableItemData, onDragStart: (e: DragEv
         <GripVerticalIcon />
         <span className="ml-2 text-sm text-gray-200">{item.name}</span>
     </div>
-);
+));
+DraggableItem.displayName = 'DraggableItem';
 
-const PaletteSection: React.FC<{ title: string, items: DraggableItemData[], onDragStart: (e: DragEvent<HTMLDivElement>, item: DraggableItemData) => void }> = ({ title, items, onDragStart }) => (
+const PaletteSection: React.FC<{ title: string, items: DraggableItemData[], onDragStart: (e: DragEvent<HTMLDivElement>, item: DraggableItemData) => void }> = memo(({ title, items, onDragStart }) => (
     <div className="mb-4">
         <h4 className="font-semibold text-gray-400 mb-2">{title}</h4>
         {items.map(item => <DraggableItem key={item.name} item={item} onDragStart={onDragStart} />)}
     </div>
-);
+));
+PaletteSection.displayName = 'PaletteSection';
 
 const ArrowDown: React.FC = () => (
     <div className="flex justify-center my-1">
@@ -65,6 +69,7 @@ const ArrowDown: React.FC = () => (
 
 
 const AutomationView: React.FC = () => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'ideas' | 'builder'>('ideas');
     
     // State for Idea Generator
@@ -77,13 +82,13 @@ const AutomationView: React.FC = () => {
     const [canvasItems, setCanvasItems] = useLocalStorage<WorkflowCanvasItem[]>('automation_canvasItems', []);
 
     const handleGenerateWorkflows = useCallback(async () => {
-        if (!prompt.trim()) { setError('Please enter a goal for your automations.'); return; }
+        if (!prompt.trim()) { setError(t('automation.ideas.errorPrompt')); return; }
         setIsGenerating(true); setError(null);
         try {
             const result = await generateWorkflows(prompt);
             setWorkflows(result);
-        } catch (e) { setError('Failed to generate workflow ideas.'); console.error(e); } finally { setIsGenerating(false); }
-    }, [prompt, setWorkflows]);
+        } catch (e) { setError(t('automation.ideas.errorGenerate')); console.error(e); } finally { setIsGenerating(false); }
+    }, [prompt, setWorkflows, t]);
 
     // Drag and Drop handlers for Workflow Builder
     const handleDragStart = (e: DragEvent<HTMLDivElement>, item: DraggableItemData) => {
@@ -104,41 +109,41 @@ const AutomationView: React.FC = () => {
          <>
             <Card>
                 <div className="space-y-4">
-                    <label htmlFor="automation-prompt" className="block text-sm font-medium text-gray-300">Automation Goal</label>
-                    <textarea id="automation-prompt" rows={2} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Cross-post my new music releases everywhere." />
+                    <label htmlFor="automation-prompt" className="block text-sm font-medium text-gray-300">{t('automation.ideas.promptLabel')}</label>
+                    <textarea id="automation-prompt" rows={2} value={prompt} onChange={(e) => setPrompt(e.target.value)} className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder={t('automation.ideas.placeholder')} />
                     {error && <p className="text-sm text-red-500">{error}</p>}
-                    <div className="text-right"><Button onClick={handleGenerateWorkflows} isLoading={isGenerating}>Generate Workflow Ideas</Button></div>
+                    <div className="text-right"><Button onClick={handleGenerateWorkflows} isLoading={isGenerating}>{t('automation.ideas.buttonGenerate')}</Button></div>
                 </div>
             </Card>
              <div className="mt-8 space-y-6">
-                 {isGenerating && workflows.length === 0 ? (<div className="text-center p-8 text-gray-400">Generating ideas...</div>) : 
+                 {isGenerating && workflows.length === 0 ? (<div className="text-center p-8 text-gray-400">{t('automation.ideas.generating')}</div>) : 
                  workflows.length > 0 ? (workflows.map((flow, index) => (
                     <Card key={`${flow.title}-${index}`} title={flow.title}>
                         <p className="text-gray-300 mb-4">{flow.description}</p>
                         <div className="space-y-3 text-sm">
-                            <p><span className="font-semibold text-gray-400">Trigger:</span> <span className="text-indigo-400">{flow.trigger}</span></p>
-                            <div><p className="font-semibold text-gray-400 mb-1">Actions:</p><ul className="list-disc list-inside text-gray-400 pl-4">{flow.actions.map((action, i) => <li key={i}>{action}</li>)}</ul></div>
-                            <p><span className="font-semibold text-gray-400">Tools:</span> {flow.tools.join(', ')}</p>
+                            <p><span className="font-semibold text-gray-400">{t('automation.ideas.trigger')}</span> <span className="text-indigo-400">{flow.trigger}</span></p>
+                            <div><p className="font-semibold text-gray-400 mb-1">{t('automation.ideas.actions')}</p><ul className="list-disc list-inside text-gray-400 pl-4">{flow.actions.map((action, i) => <li key={i}>{action}</li>)}</ul></div>
+                            <p><span className="font-semibold text-gray-400">{t('automation.ideas.tools')}</span> {flow.tools.join(', ')}</p>
                         </div>
                     </Card>
-                 ))) : (<Card><p className="text-center text-gray-400">No workflows generated yet. Describe your goal to get started.</p></Card>)}
+                 ))) : (<Card><p className="text-center text-gray-400">{t('automation.ideas.emptyState')}</p></Card>)}
              </div>
         </>
     );
 
     const WorkflowBuilder = (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card title="Components" className="md:col-span-1 h-fit">
-                <PaletteSection title="Triggers" items={DRAGGABLE_ITEMS.triggers} onDragStart={handleDragStart} />
-                <PaletteSection title="Actions" items={DRAGGABLE_ITEMS.actions} onDragStart={handleDragStart} />
-                <PaletteSection title="Tools" items={DRAGGABLE_ITEMS.tools} onDragStart={handleDragStart} />
+            <Card title={t('automation.builder.componentsTitle')} className="md:col-span-1 h-fit">
+                <PaletteSection title={t('automation.builder.triggersTitle')} items={DRAGGABLE_ITEMS.triggers} onDragStart={handleDragStart} />
+                <PaletteSection title={t('automation.builder.actionsTitle')} items={DRAGGABLE_ITEMS.actions} onDragStart={handleDragStart} />
+                <PaletteSection title={t('automation.builder.toolsTitle')} items={DRAGGABLE_ITEMS.tools} onDragStart={handleDragStart} />
             </Card>
             <div className="md:col-span-2">
                 <Card>
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold text-white">Workflow Canvas</h3>
+                        <h3 className="text-lg font-semibold text-white">{t('automation.builder.canvasTitle')}</h3>
                         <button onClick={handleClearCanvas} className="flex items-center text-sm text-gray-400 hover:text-white transition-colors">
-                            <TrashIcon /> <span className="ml-1">Clear</span>
+                            <TrashIcon /> <span className="ml-1">{t('automation.builder.buttonClear')}</span>
                         </button>
                     </div>
                     <div
@@ -147,7 +152,7 @@ const AutomationView: React.FC = () => {
                         className="bg-gray-900/50 border-2 border-dashed border-gray-600 rounded-lg min-h-[500px] p-4"
                     >
                         {canvasItems.length === 0 ? (
-                            <div className="flex items-center justify-center h-full text-gray-500">Drop components here</div>
+                            <div className="flex items-center justify-center h-full text-gray-500">{t('automation.builder.canvasPlaceholder')}</div>
                         ) : (
                             canvasItems.map((item, index) => (
                                 <React.Fragment key={item.id}>
@@ -167,7 +172,7 @@ const AutomationView: React.FC = () => {
         </div>
     );
 
-    const TabButton: React.FC<{tabType: 'ideas' | 'builder'; label: string}> = ({ tabType, label }) => (
+    const TabButton: React.FC<{tabType: 'ideas' | 'builder'; label: string}> = memo(({ tabType, label }) => (
         <button
             onClick={() => setActiveTab(tabType)}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors w-full sm:w-auto ${
@@ -176,16 +181,17 @@ const AutomationView: React.FC = () => {
         >
             {label}
         </button>
-    );
+    ));
+    TabButton.displayName = 'TabButton';
 
     return (
         <div className="animate-fade-in">
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Automation</h1>
-            <p className="text-lg text-gray-400 mb-6">Design workflows to automate your marketing and promotion.</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('automation.title')}</h1>
+            <p className="text-lg text-gray-400 mb-6">{t('automation.description')}</p>
             
             <div className="flex flex-wrap gap-2 mb-6 p-1 bg-gray-800 rounded-lg">
-                <TabButton tabType="ideas" label="Idea Generator" />
-                <TabButton tabType="builder" label="Workflow Builder" />
+                <TabButton tabType="ideas" label={t('automation.tabs.ideas')} />
+                <TabButton tabType="builder" label={t('automation.tabs.builder')} />
             </div>
             
             {activeTab === 'ideas' ? IdeaGenerator : WorkflowBuilder}

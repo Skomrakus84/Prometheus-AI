@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useId } from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { Contact } from '../../types';
 import { generateContacts } from '../../services/geminiService';
 import Spinner from '../ui/Spinner';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useTranslation } from '../../i18n';
 
 // Modal component for adding/editing contacts
 const ContactModal: React.FC<{
@@ -18,6 +19,8 @@ const ContactModal: React.FC<{
     type: 'Fan',
     tags: []
   });
+  const { t } = useTranslation();
+  const titleId = useId();
 
   useEffect(() => {
     if (contact) {
@@ -52,19 +55,28 @@ const ContactModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in-fast">
-      <Card className="w-full max-w-md bg-gray-800 border-gray-600" title={contact ? 'Edit Contact' : 'Add New Contact'}>
+    <div 
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in-fast"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
+      <Card 
+        className="w-full max-w-md bg-gray-800 border-gray-600" 
+        title={contact ? t('crm.modal.editTitle') : t('crm.modal.addTitle')}
+        titleId={titleId}
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300">Name</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300">{t('crm.modal.nameLabel')}</label>
             <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="mt-1 w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-gray-200" />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">{t('crm.modal.emailLabel')}</label>
             <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required className="mt-1 w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-gray-200" />
           </div>
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-300">Type</label>
+            <label htmlFor="type" className="block text-sm font-medium text-gray-300">{t('crm.modal.typeLabel')}</label>
             <select id="type" name="type" value={formData.type} onChange={handleChange} className="mt-1 w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-gray-200">
               <option>Fan</option>
               <option>Media</option>
@@ -73,12 +85,12 @@ const ContactModal: React.FC<{
             </select>
           </div>
            <div>
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-300">Tags (comma-separated)</label>
+            <label htmlFor="tags" className="block text-sm font-medium text-gray-300">{t('crm.modal.tagsLabel')}</label>
             <input type="text" id="tags" name="tags" value={formData.tags.join(', ')} onChange={handleTagsChange} className="mt-1 w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-gray-200" />
           </div>
           <div className="flex justify-end gap-4 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-700 hover:bg-gray-600">Cancel</button>
-            <Button type="submit">Save Contact</Button>
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:ring-indigo-500">{t('crm.modal.buttonCancel')}</button>
+            <Button type="submit">{t('crm.modal.buttonSave')}</Button>
           </div>
         </form>
       </Card>
@@ -88,6 +100,7 @@ const ContactModal: React.FC<{
 
 
 const CRMView: React.FC = () => {
+  const { t } = useTranslation();
   const [contacts, setContacts] = useLocalStorage<Contact[]>('crm_contacts', []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -108,12 +121,12 @@ const CRMView: React.FC = () => {
           return [...prev, ...newContacts];
       });
     } catch (e) {
-      setError('Failed to generate contacts.');
+      setError(t('crm.errorGenerate'));
       console.error(e);
     } finally {
       setIsLoading(false);
     }
-  }, [prompt, setContacts]);
+  }, [prompt, setContacts, t]);
 
   const handleOpenModal = (contact: Contact | null) => {
       setEditingContact(contact);
@@ -138,7 +151,7 @@ const CRMView: React.FC = () => {
   }
 
   const handleDeleteContact = (contactId: string) => {
-      if(window.confirm('Are you sure you want to delete this contact?')) {
+      if(window.confirm(t('crm.deleteConfirm'))) {
           setContacts(prev => prev.filter(c => c.id !== contactId));
       }
   }
@@ -153,8 +166,8 @@ const CRMView: React.FC = () => {
     <>
       {isModalOpen && <ContactModal contact={editingContact} onSave={handleSaveContact} onClose={handleCloseModal} />}
       <div className="animate-fade-in">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">CRM</h1>
-        <p className="text-lg text-gray-400 mb-6">Manage your contacts and industry relationships.</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('crm.title')}</h1>
+        <p className="text-lg text-gray-400 mb-6">{t('crm.description')}</p>
 
         <Card>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -163,14 +176,15 @@ const CRMView: React.FC = () => {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Describe your niche, e.g., sci-fi author"
+                  placeholder={t('crm.promptPlaceholder')}
+                  aria-label="Niche description for generating sample contacts"
               />
               <div className="flex gap-4 w-full sm:w-auto">
                  <Button onClick={handleGenerateContacts} isLoading={isLoading} className="w-full sm:w-auto flex-shrink-0">
-                      Generate Samples
+                      {t('crm.buttonGenerate')}
                   </Button>
                   <Button onClick={() => handleOpenModal(null)} className="w-full sm:w-auto flex-shrink-0 bg-green-600 hover:bg-green-700">
-                      Add Contact
+                      {t('crm.buttonAdd')}
                   </Button>
               </div>
           </div>
@@ -186,11 +200,11 @@ const CRMView: React.FC = () => {
                 <table className="w-full text-left">
                   <thead className="border-b border-gray-700 text-sm text-gray-400">
                     <tr>
-                      <th className="p-3">Name</th>
-                      <th className="p-3">Email</th>
-                      <th className="p-3">Type</th>
-                      <th className="p-3">Tags</th>
-                      <th className="p-3 text-right">Actions</th>
+                      <th className="p-3">{t('crm.table.name')}</th>
+                      <th className="p-3">{t('crm.table.email')}</th>
+                      <th className="p-3">{t('crm.table.type')}</th>
+                      <th className="p-3">{t('crm.table.tags')}</th>
+                      <th className="p-3 text-right">{t('crm.table.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -209,8 +223,8 @@ const CRMView: React.FC = () => {
                           </div>
                         </td>
                         <td className="p-3 text-right">
-                            <button onClick={() => handleOpenModal(contact)} className="text-sm font-medium text-indigo-400 hover:text-indigo-300 mr-4">Edit</button>
-                            <button onClick={() => handleDeleteContact(contact.id)} className="text-sm font-medium text-red-400 hover:text-red-300">Delete</button>
+                            <button onClick={() => handleOpenModal(contact)} className="text-sm font-medium text-indigo-400 hover:text-indigo-300 mr-4 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:ring-indigo-500">{t('crm.edit')}</button>
+                            <button onClick={() => handleDeleteContact(contact.id)} className="text-sm font-medium text-red-400 hover:text-red-300 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:ring-indigo-500">{t('crm.delete')}</button>
                         </td>
                       </tr>
                     ))}
@@ -220,7 +234,7 @@ const CRMView: React.FC = () => {
             </Card>
           ) : (
               <Card>
-                  <p className="text-center text-gray-400">No contacts to display. Add a contact or generate samples to get started.</p>
+                  <p className="text-center text-gray-400">{t('crm.emptyState')}</p>
               </Card>
           )}
         </div>

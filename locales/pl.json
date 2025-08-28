@@ -1,0 +1,294 @@
+{
+  "sidebar": {
+    "dashboard": "Pulpit",
+    "aiFactory": "Fabryka AI",
+    "distributionHub": "Centrum Dystrybucji",
+    "crm": "CRM",
+    "analytics": "Analityka",
+    "automation": "Automatyzacja",
+    "interactiveAI": "Interaktywne AI",
+    "settings": "Ustawienia",
+    "title": "Prometheus OS",
+    "version": "Prometheus OS v2.0",
+    "footer": "Rdzeń Open Source"
+  },
+  "dashboard": {
+    "title": "Witaj w Prometheus OS",
+    "description": "Twoje centrum dowodzenia promocją twórcy oparte na open-source.",
+    "showTutorial": "Pokaż samouczek",
+    "launch": "Uruchom",
+    "modules": {
+      "aiFactory": {
+        "title": "Fabryka AI",
+        "description": "Generuj teksty, obrazy i pomysły, korzystając z konceptualnego zestawu modeli AI open-source."
+      },
+      "distributionHub": {
+        "title": "Centrum Dystrybucji",
+        "description": "Symuluj planowanie treści, dystrybucję informacji prasowych i kampanie e-mail."
+      },
+      "crm": {
+        "title": "CRM",
+        "description": "Zarządzaj kontaktami i relacjami z mediami, fanami i współpracownikami."
+      },
+      "analytics": {
+        "title": "Analityka",
+        "description": "Wizualizuj wyniki swoich kampanii za pomocą dynamicznego, generowanego przez AI pulpitu."
+      },
+      "automation": {
+        "title": "Automatyzacja",
+        "description": "Projektuj i konceptualizuj schematy automatyzacji zadań marketingowych."
+      },
+      "interactiveAI": {
+        "title": "Interaktywne AI",
+        "description": "Twórz koncepcje i generuj pomysły na AR, VR i inne interaktywne doświadczenia dla fanów."
+      }
+    }
+  },
+  "aiFactory": {
+    "title": "Fabryka AI",
+    "description": "Generuj wielokanałowe treści dla swojej twórczości.",
+    "tabs": {
+      "social": "Media Społecznościowe",
+      "blog": "Pomysły na Blog",
+      "image": "Obraz",
+      "audio": "Audio (Symulacja)",
+      "video": "Wideo"
+    },
+    "promptLabel": "Temat / Opis",
+    "promptPlaceholders": {
+      "social": "np. Mój nowy singiel 'Nocny Pociąg' wychodzi w piątek!",
+      "blog": "np. Motywy samotności w moim nowym tomiku poezji.",
+      "image": "np. Koncept okładki albumu: samotny astronauta na oświetlonej neonami planecie.",
+      "audio": "np. Utwór lo-fi synthwave o melancholijnym nastroju.",
+      "video": "np. Kinowe ujęcie deszczowej ulicy miasta nocą."
+    },
+    "errorPrompt": "Proszę podać temat lub opis.",
+    "errorGenerate": "Nie udało się wygenerować treści dla {{tab}}. Proszę spróbować ponownie.",
+    "buttonGenerate": "Generuj",
+    "buttonGenerating": "Generowanie...",
+    "modelLabel": "Model Konceptualny",
+    "videoGeneratingCardTitle": "Generowanie Wideo...",
+    "videoGeneratedCardTitle": "Wygenerowane Wideo",
+    "videoFailedCardTitle": "Generowanie Nieudane",
+    "videoError": "Wystąpił nieznany błąd.",
+    "videoStatusError": "Wystąpił błąd podczas sprawdzania statusu wideo.",
+    "generating": "Generowanie...",
+    "generatingMessages": [
+      "Rozgrzewanie cyfrowej ekipy filmowej...",
+      "Renderowanie pikseli w ruch...",
+      "To może potrwać kilka minut. Czas na przerwę na kawę?",
+      "Choreografia cyfrowych aktorów...",
+      "AI czyni swoją magię...",
+      "Trwa to nieco dłużej niż zwykle, ale na dobre rzeczy warto czekać."
+    ],
+    "imageGeneratedCardTitle": "Wygenerowany Obraz",
+    "audioCardTitle": "Symulacja Generowania Audio: {{tool}}",
+    "audioDescription": "To symuluje generowanie krótkiego klipu audio przy użyciu modelu open-source {{tool}}.",
+    "audioHowToRiffusion": "Riffusion przekształca podpowiedzi tekstowe w spektrogramy, które są następnie konwertowane na dźwięk. Doskonale nadaje się do tworzenia pętli muzycznych i pejzaży dźwiękowych.",
+    "audioHowToBark": "Bark to model oparty na transformerach do generowania realistycznej mowy, muzyki i efektów dźwiękowych z podpowiedzi tekstowych.",
+    "audioMockTitle": "Wygenerowane Audio (Symulacja)",
+    "audioPromptUsedLabel": "Użyty Prompt:",
+    "audioParamsLabel": "Parametry Konceptualne:",
+    "audioHowItWorksLabel": "Jak to działa (Open Source):"
+  },
+  "distributionHub": {
+    "title": "Centrum Dystrybucji",
+    "description": "Zarządzaj informacjami prasowymi, ukierunkowanymi zgłoszeniami i harmonogramami treści.",
+    "tabs": {
+      "pr": "Informacje Prasowe",
+      "submissions": "Asystent Zgłoszeń",
+      "scheduler": "Harmonogram Treści"
+    },
+    "pr": {
+      "promptLabel": "Szczegóły Ogłoszenia",
+      "placeholder": "np. Ogłaszam moją debiutancką powieść 'Ostatnie Światło Gwiazd', która ukaże się tej jesieni.",
+      "errorPrompt": "Proszę podać treść ogłoszenia.",
+      "errorGenerate": "Nie udało się wygenerować informacji prasowej.",
+      "buttonGenerate": "Generuj Informację Prasową",
+      "cardTitle": "Wygenerowana Informacja Prasowa",
+      "contactLabel": "Kontakt:",
+      "buttonSimulate": "Symuluj Dystrybucję",
+      "statusCardTitle": "Status Dystrybucji"
+    },
+    "submissions": {
+      "promptLabel": "Opisz Swoją Twórczość",
+      "placeholder": "np. Album indie-folkowy o zmieniających się porach roku, z gitarą akustyczną i harmoniami wokalnymi.",
+      "errorPrompt": "Proszę opisać swoją twórczość.",
+      "errorGenerate": "Nie udało się wygenerować propozycji zgłoszeń.",
+      "buttonGenerate": "Generuj Propozycje"
+    },
+    "scheduler": {
+      "promptLabel": "Cel Promocyjny",
+      "placeholder": "np. Zbudować napięcie na tydzień przed premierą mojego singla w piątek.",
+      "errorPrompt": "Proszę opisać swój cel promocyjny.",
+      "errorGenerate": "Nie udało się wygenerować harmonogramu treści.",
+      "buttonGenerate": "Generuj Harmonogram",
+      "cardTitle": "7-dniowy Harmonogram Treści",
+      "buttonExport": "Eksportuj (.ics)",
+      "table": {
+        "day": "Dzień",
+        "time": "Godzina",
+        "platform": "Platforma",
+        "content": "Treść"
+      }
+    }
+  },
+  "crm": {
+    "title": "CRM",
+    "description": "Zarządzaj swoimi kontaktami i relacjami w branży.",
+    "promptPlaceholder": "Opisz swoją niszę, np. autor science-fiction",
+    "buttonGenerate": "Generuj Przykłady",
+    "buttonAdd": "Dodaj Kontakt",
+    "errorGenerate": "Nie udało się wygenerować kontaktów.",
+    "table": {
+      "name": "Nazwa",
+      "email": "Email",
+      "type": "Typ",
+      "tags": "Tagi",
+      "actions": "Akcje"
+    },
+    "emptyState": "Brak kontaktów do wyświetlenia. Dodaj kontakt lub wygeneruj przykłady, aby zacząć.",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "deleteConfirm": "Czy na pewno chcesz usunąć ten kontakt?",
+    "modal": {
+      "addTitle": "Dodaj Nowy Kontakt",
+      "editTitle": "Edytuj Kontakt",
+      "nameLabel": "Nazwa",
+      "emailLabel": "Email",
+      "typeLabel": "Typ",
+      "tagsLabel": "Tagi (oddzielone przecinkami)",
+      "buttonCancel": "Anuluj",
+      "buttonSave": "Zapisz Kontakt"
+    }
+  },
+  "analytics": {
+    "title": "Pulpit Analityczny",
+    "buttonRefresh": "Odśwież Dane",
+    "error": "Nie udało się załadować danych analitycznych.",
+    "noData": "Brak dostępnych danych.",
+    "trendCardTitle": "Trend Zaangażowania (Ostatnie 15 Dni)",
+    "sentimentCardTitle": "Sentyment Odbiorców",
+    "contentCardTitle": "Najskuteczniejsze Treści",
+    "table": {
+      "snippet": "Fragment Treści",
+      "platform": "Platforma",
+      "engagement": "Współczynnik Zaangażowania"
+    },
+    "sentiment": {
+      "positive": "Pozytywny",
+      "neutral": "Neutralny",
+      "negative": "Negatywny"
+    }
+  },
+  "automation": {
+    "title": "Automatyzacja",
+    "description": "Projektuj schematy automatyzacji marketingu i promocji.",
+    "tabs": {
+      "ideas": "Generator Pomysłów",
+      "builder": "Kreator Schematów"
+    },
+    "ideas": {
+      "promptLabel": "Cel Automatyzacji",
+      "placeholder": "np. Publikuj moje nowe utwory muzyczne wszędzie.",
+      "errorPrompt": "Proszę podać cel dla swoich automatyzacji.",
+      "errorGenerate": "Nie udało się wygenerować pomysłów na schematy.",
+      "buttonGenerate": "Generuj Pomysły",
+      "generating": "Generowanie pomysłów...",
+      "emptyState": "Nie wygenerowano jeszcze żadnych schematów. Opisz swój cel, aby zacząć.",
+      "trigger": "Wyzwalacz:",
+      "actions": "Akcje:",
+      "tools": "Narzędzia:"
+    },
+    "builder": {
+      "componentsTitle": "Komponenty",
+      "triggersTitle": "Wyzwalacze",
+      "actionsTitle": "Akcje",
+      "toolsTitle": "Narzędzia",
+      "canvasTitle": "Płótno Schematu",
+      "buttonClear": "Wyczyść",
+      "canvasPlaceholder": "Upuść komponenty tutaj"
+    }
+  },
+  "interactive": {
+    "title": "Interaktywne AI",
+    "description": "Twórz koncepcje doświadczeń AR/VR/MR dla swoich odbiorców.",
+    "promptLabel": "Twój Pomysł",
+    "placeholder": "np. Wirtualna galeria mojej grafiki koncepcyjnej, model 3D mojego głównego bohatera...",
+    "errorPrompt": "Proszę wprowadzić pomysł na interaktywne doświadczenie.",
+    "errorGenerate": "Nie udało się wygenerować koncepcji interaktywnej.",
+    "buttonGenerate": "Generuj Koncepcję",
+    "cardTitle": "Wygenerowana Koncepcja",
+    "ideasLabel": "Pomysły na Interakcję:",
+    "platformLabel": "Platforma Docelowa:",
+    "artLabel": "Grafika Koncepcyjna:"
+  },
+  "settings": {
+    "title": "Ustawienia i Konfiguracja",
+    "description": "Konceptualnie skonfiguruj swój stos technologiczny Prometheus OS.",
+    "infoBox": {
+      "title": "Potęga Wyboru",
+      "content": "Prometheus OS jest zbudowany na fundamencie darmowych narzędzi open-source. Ten panel pozwala na konceptualne zaplanowanie idealnego stosu technologicznego. Aplikacja będzie używać domyślnych integracji, ale to pomaga w architekturze Twojego własnego ekosystemu self-hosted lub na darmowym planie."
+    },
+    "sections": {
+      "ai": "Fabryka AI (Generowanie Treści)",
+      "crm": "CRM i PR",
+      "analytics": "Analityka i Monitorowanie",
+      "automation": "Silnik Automatyzacji"
+    },
+    "labels": {
+      "textModels": "Modele Tekstowe",
+      "imageModels": "Modele Obrazu",
+      "audioModels": "Modele Audio",
+      "transcription": "Transkrypcja",
+      "crmSystem": "System CRM",
+      "marketingAutomation": "Automatyzacja Marketingu",
+      "newsroom": "Newsroom / EPK CMS",
+      "webAnalytics": "Analityka Internetowa",
+      "dashboards": "Pulpity Nawigacyjne",
+      "workflowAutomation": "Automatyzacja Procesów"
+    },
+    "buttonSave": "Zapisz Konfigurację (Koncepcyjne)",
+    "language": {
+      "title": "Język",
+      "selectLabel": "Język Interfejsu"
+    }
+  },
+  "onboarding": {
+    "step": "Krok {{current}} z {{total}}",
+    "buttonNext": "Dalej",
+    "buttonFinish": "Zakończ",
+    "buttonPrevious": "Wstecz",
+    "close": "Zamknij samouczek",
+    "steps": [
+      {
+        "title": "Witaj w Prometheus OS!",
+        "description": "Ten krótki przewodnik zapozna Cię z kluczowymi modułami, które mają na celu wzmocnienie Twoich działań promocyjnych. Zaczynajmy!"
+      },
+      {
+        "title": "Fabryka AI",
+        "description": "Twoje centrum tworzenia treści. Generuj posty na media społecznościowe, pomysły na blogi, obrazy promocyjne, a nawet symuluj koncepcje audio i wideo na podstawie prostego tekstu."
+      },
+      {
+        "title": "Centrum Dystrybucji",
+        "description": "Planuj i realizuj swoje działania. Generuj profesjonalne informacje prasowe, twórz ukierunkowane propozycje dla blogów i kuratorów, a także buduj pełny 7-dniowy harmonogram treści."
+      },
+      {
+        "title": "CRM",
+        "description": "Zarządzaj swoją siecią zawodową. Generuj przykładowe kontakty dla swojej niszy, a następnie dodawaj, edytuj i organizuj własne kontakty z mediami, fanami i współpracownikami."
+      },
+      {
+        "title": "Analityka",
+        "description": "Wizualizuj swój sukces. Generuj dynamiczny, symulowany raport analityczny, aby zrozumieć wyniki kampanii, sentyment odbiorców i najskuteczniejsze treści."
+      },
+      {
+        "title": "Automatyzacja",
+        "description": "Pracuj mądrzej, nie ciężej. Otrzymuj pomysły na automatyzację marketingu wspierane przez AI i projektuj własne konceptualne schematy za pomocą kreatora 'przeciągnij i upuść'."
+      },
+      {
+        "title": "Interaktywne AI",
+        "description": "Angażuj swoją publiczność na nowym poziomie. Twórz i konceptualizuj interaktywne doświadczenia, takie jak filtry AR czy galerie VR, i natychmiast generuj grafiki koncepcyjne."
+      }
+    ]
+  }
+}

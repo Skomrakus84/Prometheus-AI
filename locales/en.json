@@ -1,0 +1,294 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "aiFactory": "AI Factory",
+    "distributionHub": "Distribution Hub",
+    "crm": "CRM",
+    "analytics": "Analytics",
+    "automation": "Automation",
+    "interactiveAI": "Interactive AI",
+    "settings": "Settings",
+    "title": "Prometheus OS",
+    "version": "Prometheus OS v2.0",
+    "footer": "Open Source Core"
+  },
+  "dashboard": {
+    "title": "Welcome to Prometheus OS",
+    "description": "Your open-source command center for creator promotion.",
+    "showTutorial": "Show Tutorial",
+    "launch": "Launch",
+    "modules": {
+      "aiFactory": {
+        "title": "AI Factory",
+        "description": "Generate text, images, and ideas using a conceptual suite of open-source AI models."
+      },
+      "distributionHub": {
+        "title": "Distribution Hub",
+        "description": "Simulate content scheduling, press release distribution, and email campaigns."
+      },
+      "crm": {
+        "title": "CRM",
+        "description": "Manage your contacts and relationships with media, fans, and collaborators."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Visualize your campaign performance with a dynamic, AI-generated dashboard."
+      },
+      "automation": {
+        "title": "Automation",
+        "description": "Design and conceptualize workflows to automate your marketing tasks."
+      },
+      "interactiveAI": {
+        "title": "Interactive AI",
+        "description": "Conceptualize and generate ideas for AR, VR, and other interactive fan experiences."
+      }
+    }
+  },
+  "aiFactory": {
+    "title": "AI Factory",
+    "description": "Generate multi-channel content for your creative work.",
+    "tabs": {
+      "social": "Social Media",
+      "blog": "Blog Ideas",
+      "image": "Image",
+      "audio": "Audio (Simulated)",
+      "video": "Video"
+    },
+    "promptLabel": "Topic / Description",
+    "promptPlaceholders": {
+      "social": "e.g., My new single 'Midnight Train' is out on Friday!",
+      "blog": "e.g., The themes of loneliness in my new poetry collection.",
+      "image": "e.g., Album art concept: a lone astronaut on a neon-lit planet.",
+      "audio": "e.g., Lo-fi synthwave track with a melancholic mood.",
+      "video": "e.g., A cinematic shot of a rainy city street at night."
+    },
+    "errorPrompt": "Please enter a topic or description.",
+    "errorGenerate": "Failed to generate {{tab}} content. Please try again.",
+    "buttonGenerate": "Generate",
+    "buttonGenerating": "Generating...",
+    "modelLabel": "Conceptual Model",
+    "videoGeneratingCardTitle": "Generating Video...",
+    "videoGeneratedCardTitle": "Generated Video",
+    "videoFailedCardTitle": "Generation Failed",
+    "videoError": "An unknown error occurred.",
+    "videoStatusError": "An error occurred while checking video status.",
+    "generating": "Generating...",
+    "generatingMessages": [
+      "Warming up the digital film crew...",
+      "Rendering pixels into motion...",
+      "This can take a few minutes. Time for a coffee break?",
+      "Choreographing the digital actors...",
+      "The AI is working its magic...",
+      "This is taking a bit longer than usual, but good things come to those who wait."
+    ],
+    "imageGeneratedCardTitle": "Generated Image",
+    "audioCardTitle": "Simulated Audio Generation: {{tool}}",
+    "audioDescription": "This simulates generating a short audio clip using the open-source model {{tool}}.",
+    "audioHowToRiffusion": "Riffusion turns text prompts into spectrograms, which are then converted into audio. It excels at creating music loops and soundscapes.",
+    "audioHowToBark": "Bark is a transformer-based model for generating realistic speech, music, and sound effects from text prompts.",
+    "audioMockTitle": "Generated Audio (Simulation)",
+    "audioPromptUsedLabel": "Prompt Used:",
+    "audioParamsLabel": "Conceptual Parameters:",
+    "audioHowItWorksLabel": "How It Works (Open Source):"
+  },
+  "distributionHub": {
+    "title": "Distribution Hub",
+    "description": "Manage press releases, targeted submissions, and content schedules.",
+    "tabs": {
+      "pr": "Press Releases",
+      "submissions": "Submission Assistant",
+      "scheduler": "Content Scheduler"
+    },
+    "pr": {
+      "promptLabel": "Announcement Details",
+      "placeholder": "e.g., Announcing my debut novel 'The Last Starlight', out this fall.",
+      "errorPrompt": "Please enter an announcement.",
+      "errorGenerate": "Failed to generate press release.",
+      "buttonGenerate": "Generate Press Release",
+      "cardTitle": "Generated Press Release",
+      "contactLabel": "Contact:",
+      "buttonSimulate": "Simulate Distribution",
+      "statusCardTitle": "Distribution Status"
+    },
+    "submissions": {
+      "promptLabel": "Describe Your Work",
+      "placeholder": "e.g., An indie-folk album about seasons changing, with acoustic guitar and vocal harmonies.",
+      "errorPrompt": "Please describe your work.",
+      "errorGenerate": "Failed to generate submission pitches.",
+      "buttonGenerate": "Generate Pitches"
+    },
+    "scheduler": {
+      "promptLabel": "Promotional Goal",
+      "placeholder": "e.g., Build hype for the week leading up to my single release on Friday.",
+      "errorPrompt": "Please describe your promotional goal.",
+      "errorGenerate": "Failed to generate content schedule.",
+      "buttonGenerate": "Generate Schedule",
+      "cardTitle": "7-Day Content Schedule",
+      "buttonExport": "Export (.ics)",
+      "table": {
+        "day": "Day",
+        "time": "Time",
+        "platform": "Platform",
+        "content": "Content"
+      }
+    }
+  },
+  "crm": {
+    "title": "CRM",
+    "description": "Manage your contacts and industry relationships.",
+    "promptPlaceholder": "Describe your niche, e.g., sci-fi author",
+    "buttonGenerate": "Generate Samples",
+    "buttonAdd": "Add Contact",
+    "errorGenerate": "Failed to generate contacts.",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "type": "Type",
+      "tags": "Tags",
+      "actions": "Actions"
+    },
+    "emptyState": "No contacts to display. Add a contact or generate samples to get started.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this contact?",
+    "modal": {
+      "addTitle": "Add New Contact",
+      "editTitle": "Edit Contact",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "typeLabel": "Type",
+      "tagsLabel": "Tags (comma-separated)",
+      "buttonCancel": "Cancel",
+      "buttonSave": "Save Contact"
+    }
+  },
+  "analytics": {
+    "title": "Analytics Dashboard",
+    "buttonRefresh": "Refresh Data",
+    "error": "Failed to load analytics data.",
+    "noData": "No data available.",
+    "trendCardTitle": "Engagement Trend (Last 15 Days)",
+    "sentimentCardTitle": "Audience Sentiment",
+    "contentCardTitle": "Top Performing Content",
+    "table": {
+      "snippet": "Content Snippet",
+      "platform": "Platform",
+      "engagement": "Engagement Rate"
+    },
+    "sentiment": {
+      "positive": "Positive",
+      "neutral": "Neutral",
+      "negative": "Negative"
+    }
+  },
+  "automation": {
+    "title": "Automation",
+    "description": "Design workflows to automate your marketing and promotion.",
+    "tabs": {
+      "ideas": "Idea Generator",
+      "builder": "Workflow Builder"
+    },
+    "ideas": {
+      "promptLabel": "Automation Goal",
+      "placeholder": "e.g., Cross-post my new music releases everywhere.",
+      "errorPrompt": "Please enter a goal for your automations.",
+      "errorGenerate": "Failed to generate workflow ideas.",
+      "buttonGenerate": "Generate Workflow Ideas",
+      "generating": "Generating ideas...",
+      "emptyState": "No workflows generated yet. Describe your goal to get started.",
+      "trigger": "Trigger:",
+      "actions": "Actions:",
+      "tools": "Tools:"
+    },
+    "builder": {
+      "componentsTitle": "Components",
+      "triggersTitle": "Triggers",
+      "actionsTitle": "Actions",
+      "toolsTitle": "Tools",
+      "canvasTitle": "Workflow Canvas",
+      "buttonClear": "Clear",
+      "canvasPlaceholder": "Drop components here"
+    }
+  },
+  "interactive": {
+    "title": "Interactive AI",
+    "description": "Conceptualize AR/VR/MR experiences for your audience.",
+    "promptLabel": "Your Idea",
+    "placeholder": "e.g., A virtual gallery of my concept art, a 3D model of my main character...",
+    "errorPrompt": "Please enter an idea for an interactive experience.",
+    "errorGenerate": "Failed to generate interactive concept.",
+    "buttonGenerate": "Generate Concept",
+    "cardTitle": "Generated Concept",
+    "ideasLabel": "Interaction Ideas:",
+    "platformLabel": "Target Platform:",
+    "artLabel": "Concept Art:"
+  },
+  "settings": {
+    "title": "Settings & Configuration",
+    "description": "Conceptually configure your Prometheus OS stack.",
+    "infoBox": {
+      "title": "The Power of Choice",
+      "content": "Prometheus OS is built on a foundation of free and open-source tools. This panel allows you to conceptually plan your ideal stack. The application will use default integrations, but this helps you architect your self-hosted or free-tier ecosystem."
+    },
+    "sections": {
+      "ai": "AI Factory (Content Generation)",
+      "crm": "CRM & PR",
+      "analytics": "Analytics & Monitoring",
+      "automation": "Automation Engine"
+    },
+    "labels": {
+      "textModels": "Text Models",
+      "imageModels": "Image Models",
+      "audioModels": "Audio Models",
+      "transcription": "Transcription",
+      "crmSystem": "CRM System",
+      "marketingAutomation": "Marketing Automation",
+      "newsroom": "Newsroom / EPK CMS",
+      "webAnalytics": "Web Analytics",
+      "dashboards": "Dashboards",
+      "workflowAutomation": "Workflow Automation"
+    },
+    "buttonSave": "Save Configuration (Conceptual)",
+    "language": {
+      "title": "Language",
+      "selectLabel": "Interface Language"
+    }
+  },
+  "onboarding": {
+    "step": "Step {{current}} of {{total}}",
+    "buttonNext": "Next",
+    "buttonFinish": "Finish",
+    "buttonPrevious": "Previous",
+    "close": "Close tutorial",
+    "steps": [
+      {
+        "title": "Welcome to Prometheus OS!",
+        "description": "This short guide will walk you through the key modules designed to superpower your promotional efforts. Let's get started!"
+      },
+      {
+        "title": "AI Factory",
+        "description": "Your content creation hub. Generate social media posts, blog ideas, promotional images, and even simulate audio and video concepts from a simple text prompt."
+      },
+      {
+        "title": "Distribution Hub",
+        "description": "Plan and execute your outreach. Generate professional press releases, create targeted submission pitches for blogs and curators, and build a full 7-day content schedule."
+      },
+      {
+        "title": "CRM",
+        "description": "Manage your professional network. Generate sample contacts for your niche, then add, edit, and organize your own media contacts, fans, and collaborators."
+      },
+      {
+        "title": "Analytics",
+        "description": "Visualize your success. Generate a dynamic, simulated analytics report to understand campaign performance, audience sentiment, and top-performing content."
+      },
+      {
+        "title": "Automation",
+        "description": "Work smarter, not harder. Get AI-powered ideas for marketing automation workflows and design your own conceptual flows using a drag-and-drop builder."
+      },
+      {
+        "title": "Interactive AI",
+        "description": "Engage your audience on a new level. Brainstorm and conceptualize interactive experiences like AR filters or VR galleries, and generate concept art instantly."
+      }
+    ]
+  }
+}

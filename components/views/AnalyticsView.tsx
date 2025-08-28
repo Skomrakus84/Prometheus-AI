@@ -1,13 +1,14 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import Card from '../ui/Card';
 import { AnalyticsIcon } from '../icons/Icons';
 import { generateAnalyticsData } from '../../services/geminiService';
 import { AnalyticsData, KPI } from '../../types';
 import Spinner from '../ui/Spinner';
+import { useTranslation } from '../../i18n';
 
 // A simple chart component for demonstration
-const BarChart: React.FC<{ data: AnalyticsData['engagementTrend'] }> = ({ data }) => {
+const BarChart: React.FC<{ data: AnalyticsData['engagementTrend'] }> = memo(({ data }) => {
     const maxValue = Math.max(...data.map(d => d.likes + d.comments + d.shares));
     return (
         <div className="w-full h-64 bg-gray-900/50 p-4 rounded-lg flex items-end justify-around space-x-2">
@@ -24,9 +25,11 @@ const BarChart: React.FC<{ data: AnalyticsData['engagementTrend'] }> = ({ data }
             ))}
         </div>
     );
-};
+});
+BarChart.displayName = 'BarChart';
 
-const DonutChart: React.FC<{ data: AnalyticsData['sentiment'] }> = ({ data }) => {
+const DonutChart: React.FC<{ data: AnalyticsData['sentiment'] }> = memo(({ data }) => {
+    const { t } = useTranslation();
     const { positive, neutral, negative } = data;
     const total = positive + neutral + negative;
     const p1 = (positive / total) * 100;
@@ -43,15 +46,16 @@ const DonutChart: React.FC<{ data: AnalyticsData['sentiment'] }> = ({ data }) =>
                 <div className="w-24 h-24 bg-gray-800 rounded-full"></div>
             </div>
             <div className="space-y-2 text-sm">
-                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>Positive: {positive}%</div>
-                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>Neutral: {neutral}%</div>
-                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>Negative: {negative}%</div>
+                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>{t('analytics.sentiment.positive')}: {positive}%</div>
+                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>{t('analytics.sentiment.neutral')}: {neutral}%</div>
+                <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>{t('analytics.sentiment.negative')}: {negative}%</div>
             </div>
         </div>
     );
-}
+});
+DonutChart.displayName = 'DonutChart';
 
-const KPICard: React.FC<{ item: KPI }> = ({ item }) => {
+const KPICard: React.FC<{ item: KPI }> = memo(({ item }) => {
     const isIncrease = item.changeType === 'increase';
     return (
         <Card className="p-4">
@@ -62,13 +66,15 @@ const KPICard: React.FC<{ item: KPI }> = ({ item }) => {
             </div>
         </Card>
     )
-};
+});
+KPICard.displayName = 'KPICard';
 
 
 const AnalyticsView: React.FC = () => {
     const [data, setData] = useState<AnalyticsData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const fetchData = useCallback(async () => {
         setIsLoading(true);
@@ -77,12 +83,12 @@ const AnalyticsView: React.FC = () => {
             const result = await generateAnalyticsData();
             setData(result);
         } catch (e) {
-            setError("Failed to load analytics data.");
+            setError(t('analytics.error'));
             console.error(e);
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         fetchData();
@@ -93,15 +99,15 @@ const AnalyticsView: React.FC = () => {
     }
 
     if (error || !data) {
-        return <div className="text-center text-red-400">{error || "No data available."}</div>;
+        return <div className="text-center text-red-400">{error || t('analytics.noData')}</div>;
     }
 
     return (
         <div className="animate-fade-in space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white">Analytics Dashboard</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold text-white">{t('analytics.title')}</h1>
                  <button onClick={fetchData} className="px-4 py-2 text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-600 transition-colors">
-                    Refresh Data
+                    {t('analytics.buttonRefresh')}
                 </button>
             </div>
 
@@ -110,22 +116,22 @@ const AnalyticsView: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card title="Engagement Trend (Last 15 Days)" className="lg:col-span-2">
+                <Card title={t('analytics.trendCardTitle')} className="lg:col-span-2">
                     <BarChart data={data.engagementTrend} />
                 </Card>
-                <Card title="Audience Sentiment">
+                <Card title={t('analytics.sentimentCardTitle')}>
                     <DonutChart data={data.sentiment} />
                 </Card>
             </div>
             
-            <Card title="Top Performing Content">
+            <Card title={t('analytics.contentCardTitle')}>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="border-b border-gray-700 text-sm text-gray-400">
                             <tr>
-                                <th className="p-2">Content Snippet</th>
-                                <th className="p-2">Platform</th>
-                                <th className="p-2">Engagement Rate</th>
+                                <th className="p-2">{t('analytics.table.snippet')}</th>
+                                <th className="p-2">{t('analytics.table.platform')}</th>
+                                <th className="p-2">{t('analytics.table.engagement')}</th>
                             </tr>
                         </thead>
                         <tbody>
