@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
-import { InteractiveConcept } from '../../types';
-import { generateInteractiveConcept, generateImage } from '../../services/geminiService';
-import Spinner from '../ui/Spinner';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { useTranslation } from '../../i18n';
+import Card from '/components/ui/Card.js';
+import Button from '/components/ui/Button.js';
+import { InteractiveConcept } from '/types.js';
+import { generateInteractiveConcept, generateImage } from '/services/geminiService.js';
+import Spinner from '/components/ui/Spinner.js';
+import useLocalStorage from '/components/hooks/useLocalStorage.js';
+import { useTranslation } from '/i18n.js';
 
 const InteractiveView: React.FC = () => {
     const { t } = useTranslation();

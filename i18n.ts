@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import useLocalStorage from './components/hooks/useLocalStorage';
+import useLocalStorage from '/components/hooks/useLocalStorage.js';
 
 type Language = 'en' | 'pl';
 // Use a generic type for translations since they are loaded dynamically
@@ -21,8 +21,8 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const fetchTranslations = async () => {
       try {
         const [enResponse, plResponse] = await Promise.all([
-          fetch('./locales/en.json'),
-          fetch('./locales/pl.json')
+          fetch('/locales/en.json'),
+          fetch('/locales/pl.json')
         ]);
         const enData = await enResponse.json();
         const plData = await plResponse.json();

@@ -1,13 +1,14 @@
 
+
 import React, { useState, useCallback, memo } from 'react';
-import { generatePressRelease, generateSubmissions, generateContentSchedule } from '../../services/geminiService';
-import { PressRelease, DistributionPlatform, DistributionStatus, Submission, ScheduledPost } from '../../types';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
-import { CheckCircleIcon, XCircleIcon, DownloadIcon } from '../icons/Icons';
-import Spinner from '../ui/Spinner';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { useTranslation } from '../../i18n';
+import { generatePressRelease, generateSubmissions, generateContentSchedule } from '/services/geminiService.js';
+import { PressRelease, DistributionPlatform, DistributionStatus, Submission, ScheduledPost } from '/types.js';
+import Card from '/components/ui/Card.js';
+import Button from '/components/ui/Button.js';
+import { CheckCircleIcon, XCircleIcon, DownloadIcon } from '/components/icons/Icons.js';
+import Spinner from '/components/ui/Spinner.js';
+import useLocalStorage from '/components/hooks/useLocalStorage.js';
+import { useTranslation } from '/i18n.js';
 
 type DistributionTab = 'pr' | 'submissions' | 'scheduler';
 

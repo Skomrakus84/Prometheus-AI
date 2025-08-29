@@ -1,16 +1,45 @@
-
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { generateSocialMediaPosts, generateBlogIdeas, generateImage, generateVideo, getVideosOperation, fetchVideo } from '../../services/geminiService';
-import { SocialMediaPost, BlogIdea, SimulatedAudio, GeneratedVideo } from '../../types';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
-import useLocalStorage from '../hooks/useLocalStorage';
-import Spinner from '../ui/Spinner';
-import { useTranslation } from '../../i18n';
+import { generateSocialMediaPosts, generateBlogIdeas, generateImage, generateVideo, getVideosOperation, fetchVideo } from '/services/geminiService.js';
+import { SocialMediaPost, BlogIdea, SimulatedAudio, GeneratedVideo } from '/types.js';
+import Card from '/components/ui/Card.js';
+import Button from '/components/ui/Button.js';
+import useLocalStorage from '/components/hooks/useLocalStorage.js';
+import Spinner from '/components/ui/Spinner.js';
+import { useTranslation } from '/i18n.js';
 
 type ContentType = 'social' | 'blog' | 'image' | 'audio' | 'video';
 
-const VideoContentRenderer: React.FC<{ videoState: GeneratedVideo }> = ({ videoState }) => {
+const AIFactoryView: React.FC = () => {
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<ContentType>('social');
+  const [prompt, setPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // State for generated content, persisted in localStorage
+  const [socialPosts, setSocialPosts] = useLocalStorage<SocialMediaPost[]>('aiFactory_socialPosts', []);
+  const [blogIdeas, setBlogIdeas] = useLocalStorage<BlogIdea[]>('aiFactory_blogIdeas', []);
+  const [imageUrl, setImageUrl] = useLocalStorage<string>('aiFactory_imageUrl', '');
+  const [simulatedAudio, setSimulatedAudio] = useLocalStorage<SimulatedAudio | null>('aiFactory_simulatedAudio', null);
+  const [videoState, setVideoState] = useLocalStorage<GeneratedVideo>('aiFactory_generatedVideo', { status: 'idle' });
+
+  // State to trigger visual feedback on generation
+  const [justGenerated, setJustGenerated] = useState(false);
+
+  /**
+   * Effect to reset the visual feedback animation state after it has played.
+   */
+  useEffect(() => {
+    if (justGenerated) {
+      const timer = setTimeout(() => {
+        setJustGenerated(false);
+      }, 1500); // Must match the animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [justGenerated]);
+
+
+  const VideoContentRenderer: React.FC<{ videoState: GeneratedVideo }> = ({ videoState }) => {
     const { t } = useTranslation();
     const generatingMessages = t('aiFactory.generatingMessages', {}) as unknown as string[];
     const [message, setMessage] = useState(generatingMessages[0]);
@@ -43,7 +72,7 @@ const VideoContentRenderer: React.FC<{ videoState: GeneratedVideo }> = ({ videoS
 
     if (videoState.status === 'success' && videoState.videoUrl) {
         return (
-            <div className="animate-fade-in">
+            <div className={`animate-fade-in ${justGenerated ? 'highlight-on-generate' : ''}`}>
                 <Card title={t('aiFactory.videoGeneratedCardTitle')}>
                     <video controls src={videoState.videoUrl} className="w-full rounded-lg shadow-lg" />
                 </Card>
@@ -62,22 +91,7 @@ const VideoContentRenderer: React.FC<{ videoState: GeneratedVideo }> = ({ videoS
     }
 
     return null;
-};
-
-
-const AIFactoryView: React.FC = () => {
-  const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<ContentType>('social');
-  const [prompt, setPrompt] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  // State for generated content, persisted in localStorage
-  const [socialPosts, setSocialPosts] = useLocalStorage<SocialMediaPost[]>('aiFactory_socialPosts', []);
-  const [blogIdeas, setBlogIdeas] = useLocalStorage<BlogIdea[]>('aiFactory_blogIdeas', []);
-  const [imageUrl, setImageUrl] = useLocalStorage<string>('aiFactory_imageUrl', '');
-  const [simulatedAudio, setSimulatedAudio] = useLocalStorage<SimulatedAudio | null>('aiFactory_simulatedAudio', null);
-  const [videoState, setVideoState] = useLocalStorage<GeneratedVideo>('aiFactory_generatedVideo', { status: 'idle' });
+  };
 
   /**
    * Effect to poll for video generation status.
@@ -103,6 +117,7 @@ const AIFactoryView: React.FC = () => {
                     const videoBlob = await fetchVideo(downloadLink);
                     const videoUrl = URL.createObjectURL(videoBlob);
                     setVideoState({ status: 'success', videoUrl: videoUrl });
+                    setJustGenerated(true);
                 } else {
                     throw new Error("Video generation completed but no video URI was found.");
                 }
@@ -141,18 +156,22 @@ const AIFactoryView: React.FC = () => {
     if (activeTab !== 'video') setVideoState({ status: 'idle' });
 
     try {
+      let success = false;
       switch (activeTab) {
         case 'social':
           const posts = await generateSocialMediaPosts(prompt);
           setSocialPosts(posts);
+          if (posts.length > 0) success = true;
           break;
         case 'blog':
           const ideas = await generateBlogIdeas(prompt);
           setBlogIdeas(ideas);
+          if (ideas.length > 0) success = true;
           break;
         case 'image':
           const url = await generateImage(prompt);
           setImageUrl(url);
+          if (url) success = true;
           break;
         case 'audio':
           const audioTool = Math.random() > 0.5 ? 'Riffusion' : 'Bark (SunO AI)';
@@ -169,12 +188,16 @@ const AIFactoryView: React.FC = () => {
                     guidance_scale: Math.floor(Math.random() * 10) + 5
                 }
             });
+            success = true;
           break;
         case 'video':
            setVideoState({ status: 'generating' });
            const operation = await generateVideo(prompt);
            setVideoState({ status: 'generating', operation: operation });
           break;
+      }
+      if (success) {
+        setJustGenerated(true);
       }
     } catch (e) {
       setError(t('aiFactory.errorGenerate', { tab: activeTab }));
@@ -205,7 +228,7 @@ const AIFactoryView: React.FC = () => {
     switch (activeTab) {
         case 'social':
             return socialPosts.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in ${justGenerated ? 'highlight-on-generate' : ''}`}>
                     {socialPosts.map((post, i) => (
                         <Card key={`${post.platform}-${i}`} title={post.platform} className="flex flex-col">
                             <p className="text-gray-300 flex-grow">{post.content}</p>
@@ -219,7 +242,7 @@ const AIFactoryView: React.FC = () => {
             );
         case 'blog':
             return blogIdeas.length > 0 && (
-                <div className="space-y-6 animate-fade-in">
+                <div className={`space-y-6 animate-fade-in ${justGenerated ? 'highlight-on-generate' : ''}`}>
                     {blogIdeas.map((idea, i) => (
                         <Card key={`${idea.title}-${i}`} title={idea.title}>
                            <h4 className="font-semibold text-gray-300 mb-2">Outline:</h4>
@@ -231,7 +254,7 @@ const AIFactoryView: React.FC = () => {
             );
         case 'image':
             return imageUrl && (
-                <div className="animate-fade-in">
+                <div className={`animate-fade-in ${justGenerated ? 'highlight-on-generate' : ''}`}>
                     <Card title={t('aiFactory.imageGeneratedCardTitle')}>
                         <img src={imageUrl} alt={prompt} className="rounded-lg w-full max-w-2xl mx-auto shadow-lg" />
                     </Card>
@@ -239,7 +262,7 @@ const AIFactoryView: React.FC = () => {
             );
         case 'audio':
             return simulatedAudio && (
-                <div className="animate-fade-in">
+                <div className={`animate-fade-in ${justGenerated ? 'highlight-on-generate' : ''}`}>
                     <Card title={t('aiFactory.audioCardTitle', { tool: simulatedAudio.tool })}>
                         <div className="space-y-6">
                             <p className="text-gray-300">{simulatedAudio.description}</p>

@@ -1,19 +1,19 @@
 
 import React, { useState, useCallback, Suspense, lazy } from 'react';
-import Sidebar from './components/Sidebar';
-import { ActiveView } from './types';
-import { I18nProvider } from './i18n';
-import Spinner from './components/ui/Spinner';
+import Sidebar from '/components/Sidebar.js';
+import { ActiveView } from '/types.js';
+import { I18nProvider } from '/i18n.js';
+import Spinner from '/components/ui/Spinner.js';
 
 // Lazy load views for performance optimization (code-splitting)
-const DashboardView = lazy(() => import('./components/views/DashboardView'));
-const AIFactoryView = lazy(() => import('./components/views/AIFactoryView'));
-const AnalyticsView = lazy(() => import('./components/views/AnalyticsView'));
-const DistributionView = lazy(() => import('./components/views/DistributionView'));
-const CRMView = lazy(() => import('./components/views/CRMView'));
-const AutomationView = lazy(() => import('./components/views/AutomationView'));
-const InteractiveView = lazy(() => import('./components/views/InteractiveView'));
-const SettingsView = lazy(() => import('./components/views/SettingsView'));
+const DashboardView = lazy(() => import('/components/views/DashboardView.js'));
+const AIFactoryView = lazy(() => import('/components/views/AIFactoryView.js'));
+const AnalyticsView = lazy(() => import('/components/views/AnalyticsView.js'));
+const DistributionView = lazy(() => import('/components/views/DistributionView.js'));
+const CRMView = lazy(() => import('/components/views/CRMView.js'));
+const AutomationView = lazy(() => import('/components/views/AutomationView.js'));
+const InteractiveView = lazy(() => import('/components/views/InteractiveView.js'));
+const SettingsView = lazy(() => import('/components/views/SettingsView.js'));
 
 
 const App: React.FC = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useId } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
+import Card from '/components/ui/Card.js';
+import Button from '/components/ui/Button.js';
 import { 
   AIFactoryIcon, 
   DistributionIcon, 
@@ -9,8 +9,8 @@ import {
   AutomationIcon, 
   InteractiveIcon,
   XIcon
-} from './icons/Icons';
-import { useTranslation } from '../i18n';
+} from '/components/icons/Icons.js';
+import { useTranslation } from '/i18n.js';
 
 const ONBOARDING_STEP_ICONS = [
     <span className="text-4xl">👋</span>,
