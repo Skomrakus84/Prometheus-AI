@@ -63,9 +63,14 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [language, translations]
   );
   
-  // Render nothing while translations are loading to prevent flicker of untranslated text
+  // Render loading state while translations are loading to prevent component unmounting
   if (!translations) {
-      return null;
+      return React.createElement('div', { 
+        className: 'flex items-center justify-center h-screen bg-gray-900 text-gray-100' 
+      }, React.createElement('div', { className: 'text-center' }, 
+        React.createElement('div', { className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-4' }),
+        React.createElement('p', null, 'Loading...')
+      ));
   }
   
   return React.createElement(I18nContext.Provider, { value: { language, setLanguage, t } }, children);
