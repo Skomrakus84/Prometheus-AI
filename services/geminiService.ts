@@ -2,7 +2,19 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { SocialMediaPost, BlogIdea, PressRelease, AnalyticsData, Contact, AutomationWorkflow, InteractiveConcept, Submission, ScheduledPost } from '../types.js';
 
 // The API key is expected to be set in the environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize lazily to handle missing API keys gracefully
+let ai: GoogleGenAI | null = null;
+
+const getAI = (): GoogleGenAI => {
+    if (!ai) {
+        const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            throw new Error("API Key is required. Please set GEMINI_API_KEY environment variable.");
+        }
+        ai = new GoogleGenAI({ apiKey });
+    }
+    return ai;
+};
 
 /**
  * A centralized error handler for Gemini API calls.
@@ -43,7 +55,8 @@ const handleGeminiError = (error: unknown, context: string): Error => {
  */
 export const generateSocialMediaPosts = async (prompt: string): Promise<SocialMediaPost[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const genAI = getAI();
+        const response = await genAI.models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate a set of 3-5 distinct social media posts to promote a musician or writer's work based on this topic: "${prompt}". Tailor each post for a different platform (X, Instagram, Mastodon, etc.).`,
             config: {
@@ -74,7 +87,7 @@ export const generateSocialMediaPosts = async (prompt: string): Promise<SocialMe
  */
 export const generateBlogIdeas = async (prompt: string): Promise<BlogIdea[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate 3 blog post ideas with outlines and keywords for a musician or writer based on this topic: "${prompt}".`,
             config: { responseMimeType: "application/json", responseSchema: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, outline: { type: Type.ARRAY, items: { type: Type.STRING } }, keywords: { type: Type.ARRAY, items: { type: Type.STRING } } } } } }
@@ -91,7 +104,7 @@ export const generateBlogIdeas = async (prompt: string): Promise<BlogIdea[]> => 
  */
 export const generatePressRelease = async (prompt: string): Promise<PressRelease> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate a professional press release for a musician or writer based on this announcement: "${prompt}". The body should have at least two paragraphs.`,
             config: { responseMimeType: "application/json", responseSchema: { type: Type.OBJECT, properties: { headline: { type: Type.STRING }, subheadline: { type: Type.STRING }, dateline: { type: Type.STRING }, body: { type: Type.STRING }, contactInfo: { type: Type.STRING } } } }
@@ -108,7 +121,7 @@ export const generatePressRelease = async (prompt: string): Promise<PressRelease
  */
 export const generateImage = async (prompt: string): Promise<string> => {
     try {
-        const response = await ai.models.generateImages({
+        const response = await getAI().models.generateImages({
             model: 'imagen-4.0-generate-001',
             prompt: `Concept art for a musician or writer. A vibrant, high-quality, aesthetically pleasing image based on the theme: ${prompt}`,
             config: { numberOfImages: 1, outputMimeType: 'image/png', aspectRatio: '1:1' },
@@ -129,7 +142,7 @@ export const generateImage = async (prompt: string): Promise<string> => {
  */
 export const generateVideo = async (prompt: string): Promise<any> => {
     try {
-        const operation = await ai.models.generateVideos({
+        const operation = await getAI().models.generateVideos({
             model: 'veo-2.0-generate-001',
             prompt: prompt,
             config: {
@@ -150,7 +163,7 @@ export const generateVideo = async (prompt: string): Promise<any> => {
  */
 export const getVideosOperation = async (operation: any): Promise<any> => {
     try {
-        const updatedOperation = await ai.operations.getVideosOperation({ operation: operation });
+        const updatedOperation = await getAI().operations.getVideosOperation({ operation: operation });
         return updatedOperation;
     } catch (error) {
         throw handleGeminiError(error, "getting video operation status");
@@ -182,7 +195,7 @@ export const fetchVideo = async (uri: string): Promise<Blob> => {
  */
 export const generateAnalyticsData = async (): Promise<AnalyticsData> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: "Generate a realistic set of marketing analytics data for an indie artist's recent album launch. Include KPIs, sentiment analysis, a 15-day engagement trend, and top performing content.",
             config: { responseMimeType: "application/json", responseSchema: { type: Type.OBJECT, properties: { kpis: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { metric: { type: Type.STRING }, value: { type: Type.STRING }, change: { type: Type.STRING }, changeType: { type: Type.STRING, enum: ['increase', 'decrease'] } } } }, sentiment: { type: Type.OBJECT, properties: { positive: { type: Type.NUMBER }, neutral: { type: Type.NUMBER }, negative: { type: Type.NUMBER } } }, engagementTrend: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { day: { type: Type.STRING }, likes: { type: Type.NUMBER }, comments: { type: Type.NUMBER }, shares: { type: Type.NUMBER } } } }, topPerformingContent: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { content: { type: Type.STRING }, platform: { type: Type.STRING }, engagementRate: { type: Type.STRING } } } } } } }
@@ -199,7 +212,7 @@ export const generateAnalyticsData = async (): Promise<AnalyticsData> => {
  */
 export const generateContacts = async (prompt: string): Promise<Contact[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate a list of 5 realistic, sample CRM contacts for a musician or writer in this genre: ${prompt}. Include media, curators, and influencers.`,
             config: { responseMimeType: "application/json", responseSchema: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, name: { type: Type.STRING }, email: { type: Type.STRING }, type: { type: Type.STRING, enum: ['Media', 'Fan', 'Influencer', 'Curator'] }, tags: { type: Type.ARRAY, items: { type: Type.STRING } } } } } }
@@ -216,7 +229,7 @@ export const generateContacts = async (prompt: string): Promise<Contact[]> => {
  */
 export const generateWorkflows = async (prompt: string): Promise<AutomationWorkflow[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate 3 automation workflow ideas for a creator focused on: ${prompt}. Describe the trigger, actions, and conceptual tools used (e.g., n8n, Mautic, WordPress).`,
             config: { responseMimeType: "application/json", responseSchema: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, description: { type: Type.STRING }, trigger: { type: Type.STRING }, actions: { type: Type.ARRAY, items: { type: Type.STRING } }, tools: { type: Type.ARRAY, items: { type: Type.STRING } } } } } }
@@ -233,7 +246,7 @@ export const generateWorkflows = async (prompt: string): Promise<AutomationWorkf
  */
 export const generateInteractiveConcept = async (prompt: string): Promise<InteractiveConcept> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Generate a detailed concept for an AR/VR/MR interactive experience for a creative project based on this idea: "${prompt}". Include a title, description, interaction ideas, target platform (e.g., Spark AR), and a descriptive prompt for generating concept art.`,
             config: { responseMimeType: "application/json", responseSchema: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, description: { type: Type.STRING }, interactionIdeas: { type: Type.ARRAY, items: { type: Type.STRING } }, platform: { type: Type.STRING }, imagePrompt: { type: Type.STRING } } } }
@@ -250,7 +263,7 @@ export const generateInteractiveConcept = async (prompt: string): Promise<Intera
  */
 export const generateSubmissions = async (prompt: string): Promise<Submission[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Based on this creative work: "${prompt}", generate a list of 5 distinct submission opportunities. For each, identify the platform name, type (e.g., Playlist Curator, Music Blog), and write a short, personalized pitch.`,
             config: {
@@ -282,7 +295,7 @@ export const generateSubmissions = async (prompt: string): Promise<Submission[]>
  */
 export const generateContentSchedule = async (prompt: string): Promise<ScheduledPost[]> => {
     try {
-        const response = await ai.models.generateContent({
+        const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash",
             contents: `Create a 7-day social media content schedule to promote a project based on this goal: "${prompt}". For each day, suggest a post time, platform, and content idea.`,
             config: {
