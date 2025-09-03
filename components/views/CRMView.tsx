@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect, useId } from 'react';
-import Card from '/components/ui/Card.js';
-import Button from '/components/ui/Button.js';
-import { Contact } from '/types.js';
-import { generateContacts } from '/services/geminiService.js';
-import Spinner from '/components/ui/Spinner.js';
-import useLocalStorage from '/components/hooks/useLocalStorage.js';
-import { useTranslation } from '/i18n.js';
+import Card from '../ui/Card.js';
+import Button from '../ui/Button.js';
+import { Contact } from '../../types.js';
+import { generateContacts } from '../../services/geminiService.js';
+import Spinner from '../ui/Spinner.js';
+import useLocalStorage from '../hooks/useLocalStorage.js';
+import { useTranslation } from '../../i18n.js';
 
 // Modal component for adding/editing contacts
 const ContactModal: React.FC<{

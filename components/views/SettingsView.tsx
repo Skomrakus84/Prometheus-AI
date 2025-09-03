@@ -1,8 +1,16 @@
 
 
+
+
+
+
+
+
+
+
 import React, { memo } from 'react';
-import Card from '/components/ui/Card.js';
-import { useTranslation } from '/i18n.js';
+import Card from '../ui/Card.js';
+import { useTranslation } from '../../i18n.js';
 
 const SettingsSection: React.FC<{ title: string; children: React.ReactNode }> = memo(({ title, children }) => (
     <div className="mb-6">

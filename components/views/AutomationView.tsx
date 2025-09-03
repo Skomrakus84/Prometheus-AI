@@ -1,13 +1,21 @@
 
 
+
+
+
+
+
+
+
+
 import React, { useState, useCallback, DragEvent, memo } from 'react';
-import Card from '/components/ui/Card.js';
-import Button from '/components/ui/Button.js';
-import { AutomationWorkflow } from '/types.js';
-import { generateWorkflows } from '/services/geminiService.js';
-import useLocalStorage from '/components/hooks/useLocalStorage.js';
-import { GripVerticalIcon, TrashIcon } from '/components/icons/Icons.js';
-import { useTranslation } from '/i18n.js';
+import Card from '../ui/Card.js';
+import Button from '../ui/Button.js';
+import { AutomationWorkflow } from '../../types.js';
+import { generateWorkflows } from '../../services/geminiService.js';
+import useLocalStorage from '../hooks/useLocalStorage.js';
+import { GripVerticalIcon, TrashIcon } from '../icons/Icons.js';
+import { useTranslation } from '../../i18n.js';
 
 // --- Workflow Builder Components & Data ---
 

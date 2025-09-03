@@ -13,7 +13,7 @@ const Card: React.FC<CardProps> = ({ children, className = '', title, titleId: c
   
   return (
     <div 
-      className={`bg-gray-800 border border-gray-700 rounded-xl shadow-lg overflow-hidden ${className}`}
+      className={`bg-gray-800 border border-gray-700 rounded-xl shadow-lg ${className}`}
       role={title ? 'region' : undefined}
       aria-labelledby={title ? titleId : undefined}
     >

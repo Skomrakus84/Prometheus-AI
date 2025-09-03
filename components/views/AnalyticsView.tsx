@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import Card from '/components/ui/Card.js';
-import { AnalyticsIcon } from '/components/icons/Icons.js';
-import { generateAnalyticsData } from '/services/geminiService.js';
-import { AnalyticsData, KPI } from '/types.js';
-import Spinner from '/components/ui/Spinner.js';
-import { useTranslation } from '/i18n.js';
+import Card from '../ui/Card.js';
+import { AnalyticsIcon } from '../icons/Icons.js';
+import { generateAnalyticsData } from '../../services/geminiService.js';
+import { AnalyticsData, KPI } from '../../types.js';
+import Spinner from '../ui/Spinner.js';
+import { useTranslation } from '../../i18n.js';
 
 // A simple chart component for demonstration
 const BarChart: React.FC<{ data: AnalyticsData['engagementTrend'] }> = memo(({ data }) => {

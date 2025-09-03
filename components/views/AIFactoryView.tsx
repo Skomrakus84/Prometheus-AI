@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { generateSocialMediaPosts, generateBlogIdeas, generateImage, generateVideo, getVideosOperation, fetchVideo } from '/services/geminiService.js';
-import { SocialMediaPost, BlogIdea, SimulatedAudio, GeneratedVideo } from '/types.js';
-import Card from '/components/ui/Card.js';
-import Button from '/components/ui/Button.js';
-import useLocalStorage from '/components/hooks/useLocalStorage.js';
-import Spinner from '/components/ui/Spinner.js';
-import { useTranslation } from '/i18n.js';
+import { generateSocialMediaPosts, generateBlogIdeas, generateImage, generateVideo, getVideosOperation, fetchVideo } from '../../services/geminiService.js';
+import { SocialMediaPost, BlogIdea, SimulatedAudio, GeneratedVideo } from '../../types.js';
+import Card from '../ui/Card.js';
+import Button from '../ui/Button.js';
+import useLocalStorage from '../hooks/useLocalStorage.js';
+import Spinner from '../ui/Spinner.js';
+import { useTranslation } from '../../i18n.js';
 
 type ContentType = 'social' | 'blog' | 'image' | 'audio' | 'video';
 

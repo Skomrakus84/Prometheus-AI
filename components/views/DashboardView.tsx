@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, memo } from 'react';
-import { ActiveView } from '/types.js';
-import Card from '/components/ui/Card.js';
-import { AIFactoryIcon, DistributionIcon, CRMIcon, AnalyticsIcon, AutomationIcon, InteractiveIcon } from '/components/icons/Icons.js';
-import useLocalStorage from '/components/hooks/useLocalStorage.js';
-import OnboardingGuide from '/components/OnboardingGuide.js';
-import { useTranslation } from '/i18n.js';
+import { ActiveView } from '../../types.js';
+import Card from '../ui/Card.js';
+import { AIFactoryIcon, DistributionIcon, CRMIcon, AnalyticsIcon, AutomationIcon, InteractiveIcon } from '../icons/Icons.js';
+import useLocalStorage from '../hooks/useLocalStorage.js';
+import OnboardingGuide from '../OnboardingGuide.js';
+import { useTranslation } from '../../i18n.js';
 
 interface DashboardViewProps {
   setActiveView: (view: ActiveView) => void;

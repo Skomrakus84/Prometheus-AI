@@ -1,6 +1,6 @@
 
 import React, { memo } from 'react';
-import { ActiveView } from '/types.js';
+import { ActiveView } from '../types.js';
 import { 
   DashboardIcon, 
   AIFactoryIcon,
@@ -11,8 +11,8 @@ import {
   InteractiveIcon,
   SettingsIcon,
   PrometheusIcon 
-} from '/components/icons/Icons.js';
-import { useTranslation } from '/i18n.js';
+} from './icons/Icons.js';
+import { useTranslation } from '../i18n.js';
 
 interface SidebarProps {
   activeView: ActiveView;
